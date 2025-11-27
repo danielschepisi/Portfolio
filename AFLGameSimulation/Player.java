@@ -10,9 +10,6 @@ public class Player
     private int effectiveDisposals;
     private int kicks;
 
-    //starPlayer
-    //injured
-
     //team??
 
     public Player()
@@ -83,6 +80,7 @@ public class Player
 
     public String getStats()
     {
+        //maybe move this to some stats model as well??
         String playerStats = "";
         playerStats += getPlayerName() + " is " + (isInjured() ? "" : "not ") + "injured,";
         playerStats += " is " + (isReported() ? "" : "not ") + "reported, ";
