@@ -12,7 +12,12 @@ public class AFLGame
     private Team teamWithPossession;
     private Player playerWithPossession;
 
-    //??default constructor
+    public AFLGame()
+    {
+        this.teams = new Team[2];
+        this.currentQuarter = 1;
+        createTeams(0);
+    }
 
     public AFLGame(int starPlayers)
     {
@@ -64,14 +69,19 @@ public class AFLGame
         } while (proceed == false);
 
         AFLGame game = new AFLGame(numberOfStarPlayers);
+
         //maybe GameModel in constructor? or in start game
-        game.startGame();
-        game.endGame(false); //this reads poorly, plus can't have this boolean
+        game.playGame();
     }
 
     public void setTeams(Team[] teams)
     {
         this.teams = teams;
+    }
+
+    public Team[] getTeams()
+    {
+        return this.teams;
     }
 
     public void setTeams(Team teamOne, Team teamTwo)
@@ -86,7 +96,7 @@ public class AFLGame
         return (Math.random() < 0.5) ? teams[0] : teams[1];
     }
 
-    public void startGame()
+    public void playGame()
     {
         do 
         {
@@ -104,8 +114,8 @@ public class AFLGame
 
                 if (this.playerWithPossession == null)
                 {
-                    this.teamWithPossession = pickRandomTeam(); //these fields should change to setTeamWithPossession
-                    this.playerWithPossession = teamWithPossession.chooseRandomMidfielder();
+                    this.teamWithPossession = pickRandomTeam(); //TWP can move to game model
+                    this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Midfielder"); //change to game modela nd ditch this. and use set and get
                 }
             
 
@@ -130,25 +140,25 @@ public class AFLGame
                         this.teamWithPossession.scoreBehind();
                         this.printScore();
                         swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomDefender();
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Defender");;
                         break;
                     case "Pass Forward":
-                        this.playerWithPossession = teamWithPossession.chooseRandomForwardExcluding(this.playerWithPossession);
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPositionExcluding("Forward", this.playerWithPossession);
                         break;
                     case "Pass Midfielder":
-                        this.playerWithPossession = teamWithPossession.chooseRandomMidfielderExcluding(this.playerWithPossession);
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPositionExcluding("Midfielder", this.playerWithPossession);
                         break;
                     case "Turnover Forward":
                         swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomForward();
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Forward");
                         break;
                     case "Turnover Midfielder":
                         swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomMidfielder();
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Midfielder");
                         break;
                     case "Turnover Defender":
                         swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomDefender();
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Defender");
                         break;
                     default:
                         //something went wrong
@@ -169,7 +179,7 @@ public class AFLGame
                         {
                             System.out.println("Game forfeit!");
                             endGame(true);
-                            return; //check these two lines of logic with the break out
+                            return; //check these two lines of logic with the break out //really probably just want this to break loop and then endGame
 
                         }
                     }
@@ -192,6 +202,8 @@ public class AFLGame
             this.currentQuarter++;
         // && continueGame/gameNotForfeit boolean
         } while (currentQuarter <= 4);
+
+        endGame(false); //this reads poorly, plus can't have this boolean
     }
 
     //gameModel
