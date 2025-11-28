@@ -12,7 +12,12 @@ public class AFLGame
     private Team teamWithPossession;
     private Player playerWithPossession;
 
-    //??default constructor
+    public AFLGame()
+    {
+        this.teams = new Team[2];
+        this.currentQuarter = 1;
+        createTeams(0);
+    }
 
     public AFLGame(int starPlayers)
     {
@@ -65,15 +70,8 @@ public class AFLGame
 
         AFLGame game = new AFLGame(numberOfStarPlayers);
 
-        System.out.println("D");
-        System.out.println(game.getTeams()[0].getPlayersOfPosition("Forward").size());
-        System.out.println(game.getTeams()[0].getPlayers().size());
-
         //maybe GameModel in constructor? or in start game
-
-
-        game.startGame();
-        game.endGame(false); //this reads poorly, plus can't have this boolean
+        game.playGame();
     }
 
     public void setTeams(Team[] teams)
@@ -98,7 +96,7 @@ public class AFLGame
         return (Math.random() < 0.5) ? teams[0] : teams[1];
     }
 
-    public void startGame()
+    public void playGame()
     {
         do 
         {
@@ -181,7 +179,7 @@ public class AFLGame
                         {
                             System.out.println("Game forfeit!");
                             endGame(true);
-                            return; //check these two lines of logic with the break out
+                            return; //check these two lines of logic with the break out //really probably just want this to break loop and then endGame
 
                         }
                     }
@@ -204,6 +202,8 @@ public class AFLGame
             this.currentQuarter++;
         // && continueGame/gameNotForfeit boolean
         } while (currentQuarter <= 4);
+
+        endGame(false); //this reads poorly, plus can't have this boolean
     }
 
     //gameModel

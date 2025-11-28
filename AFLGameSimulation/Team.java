@@ -7,6 +7,9 @@ public class Team
     private Score score; //do we move this??
     private ArrayList<Player> players;
 
+
+// move score and injure players and stats
+
     public Team()
     {
         this.teamName = "No Name";
@@ -37,15 +40,9 @@ public class Team
             i++;
         }
 
-        System.out.println("A");
-        System.out.println("B");
-        System.out.println("C");
-
         if (starPlayers > 0)
         {
             ArrayList<Player> activePlayers = new ArrayList<Player>(getActivePlayers());
-            System.out.println("A");
-            System.out.println(activePlayers.size());
             Collections.shuffle(activePlayers);
             for(int x = 0 ; x < starPlayers ; x++)
             {
@@ -115,18 +112,6 @@ public class Team
         if(getPlayersOfPosition("Reserve").size() > 0)
         {
             getPlayersOfPosition("Reserve").get(0).setFieldPosition(position);
-            // switch (position)
-            // {
-            //     case "Forward":
-            //         getReserves().get(0).setFieldPosition("Forward");
-            //         break;
-            //     case "Midfielder":
-            //         getReserves().get(0).setFieldPosition("Midfielder");
-            //         break;
-            //     case "Defender":
-            //         getReserves().get(0).setFieldPosition("Defender");
-            //         break;
-            // }
         }
     }
 
@@ -184,60 +169,6 @@ public class Team
         Collections.shuffle(temp);
         return temp.get(0); //need validation checks??
     }
-
-    
-
-
-
-    // public Player chooseRandomForward()
-    // {
-    //     ArrayList<Player> temp = new ArrayList<Player>(getForwards());
-    //     Collections.shuffle(temp);
-    //     return temp.get(0); //need validation checks??
-    // }
-
-    // public Player chooseRandomForwardExcluding(Player player)
-    // {
-    //     ArrayList<Player> temp = new ArrayList<Player>(this.forwards);
-    //     if (temp.contains(player))
-    //         temp.remove(player);
-    //     Collections.shuffle(temp); //need validation checks
-    //     return temp.get(0); //need validation checks
-    // }
-
-    // public Player chooseRandomMidfielder()
-    // {
-    //     Collections.shuffle(this.midfielders); //need validation checks
-    //     return this.midfielders.get(0); //need validation checks
-    // }
-
-    // public Player chooseRandomMidfielderExcluding(Player player)
-    // {
-    //     ArrayList<Player> temp = new ArrayList<Player>(this.midfielders);
-    //     if (temp.contains(player))
-    //         temp.remove(player);
-    //     Collections.shuffle(temp); //need validation checks
-    //     return temp.get(0); //need validation checks
-    // }
-
-    // public Player chooseRandomDefender()
-    // {
-    //     Collections.shuffle(this.defenders); //need validation checks
-    //     return this.defenders.get(0); //need validation checks
-    // }
-
-
-
-    // public Player chooseRandomReserve()
-    // {
-    //     return Collections.shuffle(this.reserves)[0]; //need validation checks
-    // }
-
-
-    // private Player chooseRandomPlayer(String position)
-    // {
-    //     switch position
-    // }
 
     public String display() //do better version
     {
