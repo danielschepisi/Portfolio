@@ -89,24 +89,24 @@ public class Team
         return injuredPlayers;
     }
 
-    public String injurePlayer() //check validation
-    {
-        String injuredPlayerName = "";
-        ArrayList<Player> activePlayers = getActivePlayers();
-        if(activePlayers.size() > 0)
-        {
-            Collections.shuffle(activePlayers);
-            Player injuredPlayer = activePlayers.get(0);
-            injuredPlayer.injure();
+    // public String injurePlayer() //check validation
+    // {
+    //     String injuredPlayerName = "";
+    //     ArrayList<Player> activePlayers = getActivePlayers();
+    //     if(activePlayers.size() > 0)
+    //     {
+    //         Collections.shuffle(activePlayers);
+    //         Player injuredPlayer = activePlayers.get(0);
+    //         injuredPlayer.injure();
 
-            replacePlayer(injuredPlayer);
-            injuredPlayerName = injuredPlayer.getPlayerName();
-        }
+    //         replacePlayer(injuredPlayer);
+    //         injuredPlayerName = injuredPlayer.getPlayerName();
+    //     }
 
-        return injuredPlayerName;
-    }
+    //     return injuredPlayerName;
+    // }
 
-    private void replacePlayer(Player injuredPlayer) //surely can improve this
+    public void replacePlayer(Player injuredPlayer) //surely can improve this
     {
         String position = injuredPlayer.getFieldPosition();
         if(getPlayersOfPosition("Reserve").size() > 0)

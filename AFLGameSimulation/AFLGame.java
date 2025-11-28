@@ -2,41 +2,23 @@ import java.util.ArrayList;
 
 public class AFLGame
 {
-    private final int EVENTS_PER_QUARTER = 80;
-    private final double REPORTED_CHANCE_PER_GAME = 0.01;
-    private final double INJURED_CHANCE_PER_EVENT = 0.02;
     private static final int MAX_NUMBER_OF_STAR_PLAYERS = 8;
 
-    private Team[] teams;
-    private int currentQuarter;
-    private Team teamWithPossession;
-    private Player playerWithPossession;
+    private GameModel gameModel;
 
     public AFLGame()
     {
-        this.teams = new Team[2];
-        this.currentQuarter = 1;
-        createTeams(0);
+        this.gameModel = new GameModel();
     }
 
-    public AFLGame(int starPlayers)
+    public GameModel getGameModel()
     {
-        this.teams = new Team[2];
-        this.currentQuarter = 1;
-        createTeams(starPlayers);
+        return this.gameModel;
     }
 
-    private void createTeams(int starPlayers)
+    public void setGameModel(GameModel gameModel)
     {
-        FileIO fileio = new FileIO();
-
-        //need to catch error around here and terminate if Exception
-        //maybe we need this class to throw an Exception so that we can catch it here
-        //maybe we can put a throws in teh catch in fileio?
-        String teamAText = fileio.readFile("teamA.txt");
-        String teamBText = fileio.readFile("teamB.txt");
-
-        setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers)); //condense?
+        this.gameModel = gameModel;
     }
 
     public static int getMaxNumberOfStarPlayers()
@@ -44,10 +26,8 @@ public class AFLGame
         return MAX_NUMBER_OF_STAR_PLAYERS;
     }
 
-    public static void main(String[] args)
+    private int askUserForNumberOfStarPlayers()
     {
-        //ask for number of star players
-        //maybe put into method and init AFLGame first
         Input consoleReader = new Input();
         Validator validator = new Validator();
         int numberOfStarPlayers = 0;
@@ -68,288 +48,147 @@ public class AFLGame
             }
         } while (proceed == false);
 
-        AFLGame game = new AFLGame(numberOfStarPlayers);
-
-        //maybe GameModel in constructor? or in start game
-        game.playGame();
+        return numberOfStarPlayers;
     }
 
-    public void setTeams(Team[] teams)
+    public static void main(String[] args)
     {
-        this.teams = teams;
+        AFLGame game = new AFLGame();
+        int numberOfStarPlayers = game.askUserForNumberOfStarPlayers();
+        game.setGameModel(new GameModel(numberOfStarPlayers));
+        String gamePlay = game.getGameModel().playGame();
+        System.out.println(gamePlay);
     }
 
-    public Team[] getTeams()
-    {
-        return this.teams;
-    }
+    // private void printScore()
+    // {
+    //     //ditch all this, but if not, reduce coupling at least
+    //     System.out.println(teams[0].getTeamName() + ": " + teams[0].displayScore());
+    //     System.out.println(teams[1].getTeamName() + ": " + teams[1].displayScore());
+    // }
 
-    public void setTeams(Team teamOne, Team teamTwo)
-    {
-        Team[] teamArray = {teamOne, teamTwo};
-        setTeams(teamArray);
-    }
+    // public void endGame(boolean forfeit)
+    // {
+    //     //probably here ln 221 > 331 to a statistics model
+    //     if(forfeit)
+    //     {
+    //         String winner = (teams[0].getActivePlayers().size() < 18) ? teams[1].getTeamName() : teams[0].getTeamName();
+    //         System.out.println("\nTHE WINNER IS: " + winner + " (due to forfeit)!");
+    //     }
+    //     else
+    //     {
+    //         //must change
+    //         String winner = teams[0].getScore().getPoints() > teams[1].getScore().getPoints() ? teams[0].getTeamName() : teams[1].getTeamName();
+    //         if(teams[0].getScore().getPoints() == teams[1].getScore().getPoints())
+    //             System.out.println("\nIT'S A DRAW!");
+    //         else
+    //             System.out.println("\nTHE WINNER IS: " + winner + "!");
+    //     }
 
-    //gameModel
-    private Team pickRandomTeam()
-    {
-        return (Math.random() < 0.5) ? teams[0] : teams[1];
-    }
 
-    public void playGame()
-    {
-        do 
-        {
-            System.out.println("-------------------------");
-            System.out.println("Quarter: " + this.currentQuarter);
-            System.out.println("-------------------------");
-            this.printScore();
-            //maybe this becomes while loop to allow for forfeit boolean
-            for (int i = 0 ; i < EVENTS_PER_QUARTER ; i++)
-            {
-                //pass all this to a game model that can have access to the player (and team)
-                //then pretty much here 97 > 183 can go and just return the outcomes that can then be printed to screen
-                //will have to think through what is passed back and how it's handled. esp scores and forfeits.
-                //maybe gameModel always passes back continueGame/gameForfeit boolean
-
-                if (this.playerWithPossession == null)
-                {
-                    this.teamWithPossession = pickRandomTeam(); //TWP can move to game model
-                    this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Midfielder"); //change to game modela nd ditch this. and use set and get
-                }
-            
-
-                String eventOutcome = this.playerWithPossession.kick();
-
-                //you will need to print this stuff
-                // System.out.print(this.teamWithPossession.getTeamName() + "\t"); //to delete
-                System.out.print(this.playerWithPossession.getPlayerName() + "\t"); //write direct method for this
-                System.out.print(eventOutcome + "\n"); //to delete
-
+    //     System.out.println("\nFinal Score (Behinds, Goals, Points):");
+    //     this.printScore();
         
-                switch (eventOutcome) //watch for validation on assigning from teams
-                {
-                    case "Goal":
-                        //assign goal
-                        this.teamWithPossession.scoreGoal();
-                        this.printScore();
-                        this.playerWithPossession = null;
-                        break;
-                    case "Behind":
-                        // assign behind
-                        this.teamWithPossession.scoreBehind();
-                        this.printScore();
-                        swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Defender");;
-                        break;
-                    case "Pass Forward":
-                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPositionExcluding("Forward", this.playerWithPossession);
-                        break;
-                    case "Pass Midfielder":
-                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPositionExcluding("Midfielder", this.playerWithPossession);
-                        break;
-                    case "Turnover Forward":
-                        swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Forward");
-                        break;
-                    case "Turnover Midfielder":
-                        swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Midfielder");
-                        break;
-                    case "Turnover Defender":
-                        swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Defender");
-                        break;
-                    default:
-                        //something went wrong
-                        break;     
-                }
+    //     //most kicks
+    //     for(Team team : teams)
+    //     {
+    //         System.out.println("\nMost Kicks for " + team.getTeamName());
+    //         ArrayList<Player> mostKicks = new ArrayList<Player>();
+    //         for(Player player : team.getPlayers()) //I'd like to sort the players
+    //         {
+    //             int playerKicks = player.getKicks();
+    //             if(mostKicks.size() > 0)
+    //             {
+    //                 int max = mostKicks.get(0).getKicks();
+    //                 if(playerKicks > max)
+    //                 {
+    //                     mostKicks.clear();
+    //                     mostKicks.add(player);
+    //                 }
+    //                 else if (playerKicks == max)
+    //                     mostKicks.add(player);
+    //             }
+    //             else
+    //             {
+    //                 mostKicks.add(player);
+    //             }
+    //         }
 
-                //injured Player
-                if(Math.random() < INJURED_CHANCE_PER_EVENT)
-                {
-                    String injuredPlayerName = pickRandomTeam().injurePlayer(); //don't like this
-                    injuredPlayerName += " was injured.";
-                    System.out.println(injuredPlayerName);
+    //         for (Player player : mostKicks)
+    //         {
+    //             System.out.println(player.getPlayerName());
+    //         }
+    //     }
 
-                    //check enough players still
-                    for(Team team : teams)
-                    {
-                        if(team.getActivePlayers().size() < 18)
-                        {
-                            System.out.println("Game forfeit!");
-                            endGame(true);
-                            return; //check these two lines of logic with the break out //really probably just want this to break loop and then endGame
+    //     //most goals
+    //     for(Team team : teams)
+    //     {
+    //         System.out.println("\nMost Goals for " + team.getTeamName());
+    //         ArrayList<Player> mostGoals = new ArrayList<Player>();
+    //         for(Player player : team.getPlayers()) 
+    //         {
+    //             int playerGoals = player.getScore().getGoals(); //write helper method if this doesn't move
+    //             if(mostGoals.size() > 0)
+    //             {
+    //                 int max = mostGoals.get(0).getKicks();
+    //                 if(playerGoals > max)
+    //                 {
+    //                     mostGoals.clear();
+    //                     mostGoals.add(player);
+    //                 }
+    //                 else if (playerGoals == max)
+    //                     mostGoals.add(player);
+    //             }
+    //             else
+    //             {
+    //                 if(playerGoals > 0)
+    //                     mostGoals.add(player);
+    //             }
+    //         }
 
-                        }
-                    }
-                }
-
-                //reported players
-                for(Team team : teams)
-                {
-                    for(Player player : team.getActivePlayers())
-                    {
-                        if(Math.random() < chanceOfBeingReportedPerEvent())
-                        {
-                            player.setIsReported(true); //maybe chagne to report
-                            System.out.println(player.getPlayerName() + " was reported.");
-                        }
-                    }
-                }
-            }
-
-            this.currentQuarter++;
-        // && continueGame/gameNotForfeit boolean
-        } while (currentQuarter <= 4);
-
-        endGame(false); //this reads poorly, plus can't have this boolean
-    }
-
-    //gameModel
-    private double chanceOfBeingReportedPerEvent()
-    {
-        return REPORTED_CHANCE_PER_GAME / EVENTS_PER_QUARTER / 4;
-    }
-
-    private void printScore()
-    {
-        //ditch all this, but if not, reduce coupling at least
-        System.out.println(teams[0].getTeamName() + ": " + teams[0].displayScore());
-        System.out.println(teams[1].getTeamName() + ": " + teams[1].displayScore());
-    }
-
-    //go to game model
-    private void swapTeams() //maybe call turnover
-    {
-        if (this.teams[0] == this.teamWithPossession)
-            this.teamWithPossession = teams[1];
-        else
-            this.teamWithPossession = teams[0];
-    }
-
-    public void endGame(boolean forfeit)
-    {
-        //probably here ln 221 > 331 to a statistics model
-        if(forfeit)
-        {
-            String winner = (teams[0].getActivePlayers().size() < 18) ? teams[1].getTeamName() : teams[0].getTeamName();
-            System.out.println("\nTHE WINNER IS: " + winner + " (due to forfeit)!");
-        }
-        else
-        {
-            //must change
-            String winner = teams[0].getScore().getPoints() > teams[1].getScore().getPoints() ? teams[0].getTeamName() : teams[1].getTeamName();
-            if(teams[0].getScore().getPoints() == teams[1].getScore().getPoints())
-                System.out.println("\nIT'S A DRAW!");
-            else
-                System.out.println("\nTHE WINNER IS: " + winner + "!");
-        }
-
-
-        System.out.println("\nFinal Score (Behinds, Goals, Points):");
-        this.printScore();
+    //         if (mostGoals.size() > 0)
+    //         {
+    //             for (Player player : mostGoals)
+    //             {
+    //                 System.out.println(player.getPlayerName());
+    //             }
+    //         }
+    //         else
+    //             System.out.println("No goal scorers.");
+    //     }
         
-        //most kicks
-        for(Team team : teams)
-        {
-            System.out.println("\nMost Kicks for " + team.getTeamName());
-            ArrayList<Player> mostKicks = new ArrayList<Player>();
-            for(Player player : team.getPlayers()) //I'd like to sort the players
-            {
-                int playerKicks = player.getKicks();
-                if(mostKicks.size() > 0)
-                {
-                    int max = mostKicks.get(0).getKicks();
-                    if(playerKicks > max)
-                    {
-                        mostKicks.clear();
-                        mostKicks.add(player);
-                    }
-                    else if (playerKicks == max)
-                        mostKicks.add(player);
-                }
-                else
-                {
-                    mostKicks.add(player);
-                }
-            }
+    //     //player stats
+    //     for(Team team : teams)
+    //     {
+    //         System.out.println("\n" + team.getTeamName());
+    //         for(Player player : team.getPlayers()) //I'd like to sort the players
+    //         {
+    //             System.out.println(player.getStats());
+    //         }
+    //     }
 
-            for (Player player : mostKicks)
-            {
-                System.out.println(player.getPlayerName());
-            }
-        }
+    //     System.out.println("\nInjured Players:");
 
-        //most goals
-        for(Team team : teams)
-        {
-            System.out.println("\nMost Goals for " + team.getTeamName());
-            ArrayList<Player> mostGoals = new ArrayList<Player>();
-            for(Player player : team.getPlayers()) 
-            {
-                int playerGoals = player.getScore().getGoals(); //write helper method if this doesn't move
-                if(mostGoals.size() > 0)
-                {
-                    int max = mostGoals.get(0).getKicks();
-                    if(playerGoals > max)
-                    {
-                        mostGoals.clear();
-                        mostGoals.add(player);
-                    }
-                    else if (playerGoals == max)
-                        mostGoals.add(player);
-                }
-                else
-                {
-                    if(playerGoals > 0)
-                        mostGoals.add(player);
-                }
-            }
+    //     for(Team team : teams)
+    //     {
+    //         System.out.print(team.listInjuredPlayers());
+    //     }
 
-            if (mostGoals.size() > 0)
-            {
-                for (Player player : mostGoals)
-                {
-                    System.out.println(player.getPlayerName());
-                }
-            }
-            else
-                System.out.println("No goal scorers.");
-        }
-        
-        //player stats
-        for(Team team : teams)
-        {
-            System.out.println("\n" + team.getTeamName());
-            for(Player player : team.getPlayers()) //I'd like to sort the players
-            {
-                System.out.println(player.getStats());
-            }
-        }
+    //     System.out.println("\nReported Players:");
 
-        System.out.println("\nInjured Players:");
+    //     for(Team team : teams)
+    //     {
+    //         System.out.print(team.listReportedPlayers());
+    //     }
 
-        for(Team team : teams)
-        {
-            System.out.print(team.listInjuredPlayers());
-        }
+    //     //prep all data for print from stats above
+    //     FileIO fileio = new FileIO();
 
-        System.out.println("\nReported Players:");
-
-        for(Team team : teams)
-        {
-            System.out.print(team.listReportedPlayers());
-        }
-
-        //prep all data for print from stats above
-        FileIO fileio = new FileIO();
-
-        for(Team team : teams)
-        {
-            String teamData = team.statsToWrite();
-            String fileName = team.getTeamName() + "Updated.txt"; //these are currently the wrong file names
-            fileio.writeFile(teamData, fileName);
-        }
-    }
+    //     for(Team team : teams)
+    //     {
+    //         String teamData = team.statsToWrite();
+    //         String fileName = team.getTeamName() + "Updated.txt"; //these are currently the wrong file names
+    //         fileio.writeFile(teamData, fileName);
+    //     }
+    // }
 } //currently 354, lets see what we can drop this to
