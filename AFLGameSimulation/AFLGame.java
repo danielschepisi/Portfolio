@@ -64,7 +64,14 @@ public class AFLGame
         } while (proceed == false);
 
         AFLGame game = new AFLGame(numberOfStarPlayers);
+
+        System.out.println("D");
+        System.out.println(game.getTeams()[0].getPlayersOfPosition("Forward").size());
+        System.out.println(game.getTeams()[0].getPlayers().size());
+
         //maybe GameModel in constructor? or in start game
+
+
         game.startGame();
         game.endGame(false); //this reads poorly, plus can't have this boolean
     }
@@ -72,6 +79,11 @@ public class AFLGame
     public void setTeams(Team[] teams)
     {
         this.teams = teams;
+    }
+
+    public Team[] getTeams()
+    {
+        return this.teams;
     }
 
     public void setTeams(Team teamOne, Team teamTwo)
@@ -104,8 +116,8 @@ public class AFLGame
 
                 if (this.playerWithPossession == null)
                 {
-                    this.teamWithPossession = pickRandomTeam(); //these fields should change to setTeamWithPossession
-                    this.playerWithPossession = teamWithPossession.chooseRandomMidfielder();
+                    this.teamWithPossession = pickRandomTeam(); //TWP can move to game model
+                    this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Midfielder"); //change to game modela nd ditch this. and use set and get
                 }
             
 
@@ -130,25 +142,25 @@ public class AFLGame
                         this.teamWithPossession.scoreBehind();
                         this.printScore();
                         swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomDefender();
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Defender");;
                         break;
                     case "Pass Forward":
-                        this.playerWithPossession = teamWithPossession.chooseRandomForwardExcluding(this.playerWithPossession);
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPositionExcluding("Forward", this.playerWithPossession);
                         break;
                     case "Pass Midfielder":
-                        this.playerWithPossession = teamWithPossession.chooseRandomMidfielderExcluding(this.playerWithPossession);
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPositionExcluding("Midfielder", this.playerWithPossession);
                         break;
                     case "Turnover Forward":
                         swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomForward();
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Forward");
                         break;
                     case "Turnover Midfielder":
                         swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomMidfielder();
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Midfielder");
                         break;
                     case "Turnover Defender":
                         swapTeams();
-                        this.playerWithPossession = teamWithPossession.chooseRandomDefender();
+                        this.playerWithPossession = teamWithPossession.chooseRandomPlayerFromPosition("Defender");
                         break;
                     default:
                         //something went wrong
