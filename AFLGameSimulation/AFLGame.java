@@ -3,25 +3,19 @@ import java.util.ArrayList;
 public class AFLGame
 {
     private final int EVENTS_PER_QUARTER = 80;
-    // private final int EVENTS_PER_QUARTER = 80;
     private final double REPORTED_CHANCE_PER_GAME = 0.01;
-    // private final double INJURED_CHANCE_PER_EVENT = 1.5;
     private final double INJURED_CHANCE_PER_EVENT = 0.02;
     private static final int MAX_NUMBER_OF_STAR_PLAYERS = 8;
 
-        
-    // private int numberOfStarPlayers;
-    private Team[] teams; //length 2
+    private Team[] teams;
     private int currentQuarter;
     private Team teamWithPossession;
     private Player playerWithPossession;
-    // private Score gameScore; //need both teams
 
     //??default constructor
 
     public AFLGame(int starPlayers)
     {
-        // this.numberOfStarPlayers = starPlayers;
         this.teams = new Team[2];
         this.currentQuarter = 1;
         createTeams(starPlayers);
@@ -31,6 +25,9 @@ public class AFLGame
     {
         FileIO fileio = new FileIO();
 
+        //need to catch error around here and terminate if Exception
+        //maybe we need this class to throw an Exception so that we can catch it here
+        //maybe we can put a throws in teh catch in fileio?
         String teamAText = fileio.readFile("teamA.txt");
         String teamBText = fileio.readFile("teamB.txt");
 
@@ -67,7 +64,9 @@ public class AFLGame
         } while (proceed == false);
 
         AFLGame game = new AFLGame(numberOfStarPlayers);
+        //maybe GameModel in constructor? or in start game
         game.startGame();
+        game.endGame(false); //this reads poorly, plus can't have this boolean
     }
 
     public void setTeams(Team[] teams)
@@ -81,6 +80,7 @@ public class AFLGame
         setTeams(teamArray);
     }
 
+    //gameModel
     private Team pickRandomTeam()
     {
         return (Math.random() < 0.5) ? teams[0] : teams[1];
@@ -94,8 +94,14 @@ public class AFLGame
             System.out.println("Quarter: " + this.currentQuarter);
             System.out.println("-------------------------");
             this.printScore();
+            //maybe this becomes while loop to allow for forfeit boolean
             for (int i = 0 ; i < EVENTS_PER_QUARTER ; i++)
             {
+                //pass all this to a game model that can have access to the player (and team)
+                //then pretty much here 97 > 183 can go and just return the outcomes that can then be printed to screen
+                //will have to think through what is passed back and how it's handled. esp scores and forfeits.
+                //maybe gameModel always passes back continueGame/gameForfeit boolean
+
                 if (this.playerWithPossession == null)
                 {
                     this.teamWithPossession = pickRandomTeam(); //these fields should change to setTeamWithPossession
@@ -107,7 +113,7 @@ public class AFLGame
 
                 //you will need to print this stuff
                 // System.out.print(this.teamWithPossession.getTeamName() + "\t"); //to delete
-                System.out.print(this.playerWithPossession.getPlayerName() + "\t"); //to delete
+                System.out.print(this.playerWithPossession.getPlayerName() + "\t"); //write direct method for this
                 System.out.print(eventOutcome + "\n"); //to delete
 
         
@@ -152,7 +158,6 @@ public class AFLGame
                 //injured Player
                 if(Math.random() < INJURED_CHANCE_PER_EVENT)
                 {
-                    //maybe pickRandomTeam method coz used elsewhere too
                     String injuredPlayerName = pickRandomTeam().injurePlayer(); //don't like this
                     injuredPlayerName += " was injured.";
                     System.out.println(injuredPlayerName);
@@ -185,39 +190,11 @@ public class AFLGame
             }
 
             this.currentQuarter++;
+        // && continueGame/gameNotForfeit boolean
         } while (currentQuarter <= 4);
-
-
-        endGame(false); //this reads poorly
-        //repeat
-        //50/50 choose team > choose midfielder
-        //or
-        //player outcome
-
-        //assign player aka affect outcome
-
-        //repeat
-        //if less than 4 quarters
-        //if less than 80 events
-        //if no playerWithPossession then 50/50 assign
-        //if player > player.play() > outcome 
-
-        //assign new player (inc behind) 
-        //grab correct team > random play from team who doesn't equal activePlayer
-        //or no player (w score update)
-
-        //if injured remove and replace player > team.playerInjured(player)
-        // OR 2% chance then random player injured (public Player checkForInjuries())
-        // also 1% / 80 / 4 of someone being reported (public Player checkForReportedPlayers())
-        // (umpire) 
-        //check teams have enough players (flag to end game continueGame, but affectOutcome first)
-
-        //print result of event
-        //print score if changed
-
-        //end of quarter, display score
     }
 
+    //gameModel
     private double chanceOfBeingReportedPerEvent()
     {
         return REPORTED_CHANCE_PER_GAME / EVENTS_PER_QUARTER / 4;
@@ -225,10 +202,12 @@ public class AFLGame
 
     private void printScore()
     {
+        //ditch all this, but if not, reduce coupling at least
         System.out.println(teams[0].getTeamName() + ": " + teams[0].displayScore());
         System.out.println(teams[1].getTeamName() + ": " + teams[1].displayScore());
     }
 
+    //go to game model
     private void swapTeams() //maybe call turnover
     {
         if (this.teams[0] == this.teamWithPossession)
@@ -239,6 +218,7 @@ public class AFLGame
 
     public void endGame(boolean forfeit)
     {
+        //probably here ln 221 > 331 to a statistics model
         if(forfeit)
         {
             String winner = (teams[0].getActivePlayers().size() < 18) ? teams[1].getTeamName() : teams[0].getTeamName();
@@ -258,6 +238,7 @@ public class AFLGame
         System.out.println("\nFinal Score (Behinds, Goals, Points):");
         this.printScore();
         
+        //most kicks
         for(Team team : teams)
         {
             System.out.println("\nMost Kicks for " + team.getTeamName());
@@ -288,7 +269,8 @@ public class AFLGame
             }
         }
 
-                for(Team team : teams)
+        //most goals
+        for(Team team : teams)
         {
             System.out.println("\nMost Goals for " + team.getTeamName());
             ArrayList<Player> mostGoals = new ArrayList<Player>();
@@ -323,9 +305,8 @@ public class AFLGame
             else
                 System.out.println("No goal scorers.");
         }
-
-        //uncomment, just for ease of viewing
         
+        //player stats
         for(Team team : teams)
         {
             System.out.println("\n" + team.getTeamName());
@@ -359,4 +340,4 @@ public class AFLGame
             fileio.writeFile(teamData, fileName);
         }
     }
-}
+} //currently 354, lets see what we can drop this to

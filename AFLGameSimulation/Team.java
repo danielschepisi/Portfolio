@@ -94,6 +94,15 @@ public class Team
 
     public ArrayList<Player> getForwards()
     {
+        // // more like, though maybe this is just an array
+        // for(Player player : players)
+        // {
+        //     if(player.isInjured() == false && player.getFieldPosition().isEqual("Forward"))
+        //     {
+        //         //add this shit to array.
+        //     }
+        // }
+
         return this.forwards;
     }
 
