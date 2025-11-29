@@ -10,7 +10,7 @@ public class Event
 
 	public Event()
 	{
-
+		this.reportedPlayers = new ArrayList<Player>();
 	}
 
 	public void addReportedPlayer(Player reported)

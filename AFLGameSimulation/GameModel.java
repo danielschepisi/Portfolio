@@ -3,7 +3,8 @@ import java.util.Collections;
 
 public class GameModel
 {
-    private final double REPORTED_CHANCE_PER_GAME = 0.01;
+    // private final double REPORTED_CHANCE_PER_GAME = 0.01;
+    private final double REPORTED_CHANCE_PER_GAME = 0.51;
     private final double INJURED_CHANCE_PER_EVENT = 0.02;
 
 

@@ -99,32 +99,41 @@ public class AFLGame
 					
 			for (int i = 1 ; i <= EVENTS_PER_PERIOD ; i++)
 			{
-                System.out.println("#" + i + "\t");
+                System.out.print("#" + i + "\t");
                 int gameEventNumber = (i-1) + ((period - 1) * EVENTS_PER_PERIOD);
 				Event currentEvent = playEvent();
 				gameEvents[gameEventNumber] = currentEvent;
 
                 Player bouncerWinner = currentEvent.getBounceWinner();
                 if (bouncerWinner != null)
-                    System.out.println(bouncerWinner.getPlayerName() + "\t" + "wins the ball from the bounce"); //strong coupling w player name
+                    System.out.print(bouncerWinner.getPlayerName() + " " + "wins the ball from the bounce.\n\t"); //strong coupling w player name
+
+                String playerName = currentEvent.getPlayerKick().getPlayer().getPlayerName(); //cpupling
+
+                String newPlayerName = "";
+                String newPlayerPosition = "";
+                Player receivingPlayer = currentEvent.getReceivingPlayer();
+                if (receivingPlayer != null)
+                {
+                    newPlayerName = receivingPlayer.getPlayerName(); //cpupling and bit messy all this
+                    newPlayerPosition = receivingPlayer.getFieldPosition().toLowerCase();
+                }
 
                 switch (currentEvent.getPlayerKick().getResult()) //styrong coupling
                 {
                     case "Goal":
                         //assign goal
-                        System.out.println("Goal");
+                        System.out.println(playerName + " kicks a goals! 6 points!");
                         break;
                     case "Behind":
                         //assign behind
-                        System.out.println("Behind");
+                        System.out.println(playerName + " kicks a behind, 1 point.");
                         break;
                     case "Pass":
-                        //print what needed including who to
-                        System.out.println("Pass");
+                        System.out.println(playerName + " passes the ball to " + newPlayerPosition + " " + newPlayerName + ".");
                         break;
                     case "Turnover":
-                        //print what needed including who to
-                        System.out.println("Turnover");
+                        System.out.println(playerName + " turns the ball over to " + newPlayerPosition + " " + newPlayerName + ".");
                         break;
                     default:
                         //something went wrong
@@ -133,16 +142,16 @@ public class AFLGame
 
                 Player injuredPlayer = currentEvent.getInjuredPlayer();
                 if (injuredPlayer != null)
-                    System.out.println(injuredPlayer.getPlayerName() + "\t" + "was injured"); //strong coupling w player name
+                    System.out.println("\t" + injuredPlayer.getPlayerName() + " " + "was injured."); //strong coupling w player name
                     
                 ArrayList<Player> reportedPlayers = currentEvent.getReportedPlayers();
-                if (reportedPlayers != null)
-                {
+                // if (reportedPlayers != null)
+                // {
                     for (Player player : reportedPlayers)
                     {
-                        System.out.println(player.getPlayerName() + "\t" + "was reported"); //strong coupling w player name
+                        System.out.println("\t" + player.getPlayerName() + " " + "was reported."); //strong coupling w player name
                     }
-                }
+                // }
 
 
 				continueGame = getGameModel().enoughUninjuredPlayers();

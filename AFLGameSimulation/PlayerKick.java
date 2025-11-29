@@ -1,5 +1,6 @@
 public class PlayerKick
 {
+    private Player player;
     private String result;
     private String toFieldPosition;
 
@@ -9,15 +10,26 @@ public class PlayerKick
         // this.fieldPosition = null;
     }
 
-    public PlayerKick(String fieldPosition, boolean isStarPlayer) //??? this()??
+    public PlayerKick(Player player, boolean isStarPlayer) //??? this()??
     {
         this();
-        decideOutcome(fieldPosition, isStarPlayer);
+        this.player = player;
+        decideOutcome();
     }
     
     public String getResult()
     {
         return this.result;
+    }
+
+    public Player getPlayer()
+    {
+        return this.player;
+    }
+
+    public void setPlayer(Player player)
+    {
+        this.player = player;
     }
 
     public String getToFieldPosition()
@@ -35,11 +47,12 @@ public class PlayerKick
         this.toFieldPosition = position;
     }
 
-    public final String[] decideOutcome(String fieldPosition, boolean isStarPlayer) //check final w constructors
+    public final String[] decideOutcome() //check final w constructors
     {
+        String fieldPosition = getPlayer().getFieldPosition(); 
         Double rand = Math.random();
         String[] outcome = new String[2];
-        if (isStarPlayer)
+        if (getPlayer().isStarPlayer())
         {
             switch (fieldPosition)
             {

@@ -155,7 +155,7 @@ public class Player
 
     public PlayerKick kick()
     {
-        PlayerKick event = new PlayerKick(getFieldPosition(), isStarPlayer());
+        PlayerKick event = new PlayerKick(this, isStarPlayer());
         // String[] outcome = event.decideOutcome(this.fieldPosition, this.starPlayer);
         
         // if(outcome[0].equals("Goal"))
