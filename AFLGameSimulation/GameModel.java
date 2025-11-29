@@ -20,7 +20,7 @@ public class GameModel
     public GameModel(int starPlayers)
     {
     	this();
-		createTeams(starPlayers);
+		createTeams(starPlayers); //******* not sure about this constructor combo
     }
 
 	public void setTeams(Team[] teams)
@@ -75,6 +75,7 @@ public class GameModel
 			Player playerWithPossession = null;
 			Team teamWithPossession = null;
 
+			//could all this quarter stuff go to. amethod
 			gamePlayNarrative.append("-------------------------\n"); //will have to changea ll these to get
 			gamePlayNarrative.append("Quarter: " + quarter + "\n");
 			gamePlayNarrative.append("-------------------------\n");
@@ -118,42 +119,39 @@ public class GameModel
 			player = team.chooseRandomPlayerFromPosition("Midfielder");
 		}
 
-		String eventOutcome = player.kick();
+		String[] eventOutcome = player.kick();
 
-		gamePlayNarrative.append(player.getPlayerName() + "\t" + eventOutcome + "\n"); //too long?
+		// gamePlayNarrative.append(player.getPlayerName() + "\t" + eventOutcome[0] + eventOutcome[1] + "\n"); //too long? //must deal with pritn statements. this has nulls
 
-		switch (eventOutcome) //watch for validation on assigning from teams
+		switch (eventOutcome[0]) //watch for validation on assigning from teams
 		{
 			case "Goal":
+				gamePlayNarrative.append(player.getPlayerName() + "\t" + "Scores a goal!"+ "\n");
 				//assign goal
 				team.scoreGoal();
 				// this.printScore();
 				player = null;
 				break;
 			case "Behind":
+				gamePlayNarrative.append(player.getPlayerName() + "\t" + "Scores a behind."+ "\n");
 				// assign behind
 				team.scoreBehind();
 				// this.printScore();
 				swapTeamsFrom(team);
 				player = team.chooseRandomPlayerFromPosition("Defender");;
 				break;
-			case "Pass Forward":
-				player = team.chooseRandomPlayerFromPositionExcluding("Forward", player);
+			case "Pass":
+				gamePlayNarrative
+				.append(player.getPlayerName() + "\t" + "Passes to " + eventOutcome[1].toLowerCase());
+				player = team.chooseRandomPlayerFromPositionExcluding(eventOutcome[1], player);
+				gamePlayNarrative.append(" " + player.getPlayerName() + "\n");
 				break;
-			case "Pass Midfielder":
-				player = team.chooseRandomPlayerFromPositionExcluding("Midfielder", player);
-				break;
-			case "Turnover Forward":
+			case "Turnover":
+				gamePlayNarrative
+				.append(player.getPlayerName() + "\t" + "Turns over to " + eventOutcome[1].toLowerCase());
 				swapTeamsFrom(team);
-				player = team.chooseRandomPlayerFromPosition("Forward");
-				break;
-			case "Turnover Midfielder":
-				swapTeamsFrom(team);
-				player = team.chooseRandomPlayerFromPosition("Midfielder");
-				break;
-			case "Turnover Defender":
-				swapTeamsFrom(team);
-				player = team.chooseRandomPlayerFromPosition("Defender");
+				player = team.chooseRandomPlayerFromPosition(eventOutcome[1]);
+				gamePlayNarrative.append(" " + player.getPlayerName() + "\n");
 				break;
 			default:
 				//something went wrong
@@ -176,7 +174,7 @@ public class GameModel
 				Player injuredPlayer = activePlayers.get(0);
 				injuredPlayer.injure();
 				team.replacePlayer(injuredPlayer);
-				gamePlayNarrative.append(injuredPlayer.getPlayerName() + " was injured.\n");
+				gamePlayNarrative.append("\t" + injuredPlayer.getPlayerName() + " was injured.\n");
 			}
 		}
 	}
@@ -190,7 +188,7 @@ public class GameModel
 				if(Math.random() < chanceOfBeingReportedPerEvent())
 				{
 					player.setIsReported(true); //maybe chagne to report
-					gamePlayNarrative.append(player.getPlayerName() + " was reported.\n");
+					gamePlayNarrative.append("\t" + player.getPlayerName() + " was reported.\n");
 				}
 			}
 		}

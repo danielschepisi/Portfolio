@@ -56,8 +56,8 @@ public class AFLGame
         AFLGame game = new AFLGame();
         int numberOfStarPlayers = game.askUserForNumberOfStarPlayers();
         game.setGameModel(new GameModel(numberOfStarPlayers));
-        String gamePlay = game.getGameModel().playGame();
-        System.out.println(gamePlay);
+        String gamePlayNarrative = game.getGameModel().playGame();
+        System.out.println(gamePlayNarrative);
     }
 
     // private void printScore()

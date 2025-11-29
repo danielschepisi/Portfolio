@@ -14,15 +14,15 @@ public class Player
 
     public Player()
     {
-        playerName = "";
-        fieldPosition = "";
-        seasonGoals = 0;
-        starPlayer = false;
-        isInjured = false;
-        isReported = false;
-        score = new Score();
-
-        // System.out.println("player init default"); //delete
+        this.playerName = "";
+        this.fieldPosition = "";
+        this.seasonGoals = 0;
+        this.starPlayer = false;
+        this.isInjured = false;
+        this.isReported = false;
+        this.score = new Score();
+        this.effectiveDisposals = 0;
+        this.kicks = 0;
     }
 
     public Player(String playerName, String fieldPosition, int seasonGoals)
@@ -30,12 +30,10 @@ public class Player
         this();
         this.playerName = playerName;
         this.fieldPosition = fieldPosition;
-        this.seasonGoals = seasonGoals;
-
-        // System.out.println("player init custom"); //delete
+        this.seasonGoals = seasonGoals; //do i have to use setters if i'm calling this()
     }
 
-    public String display()
+    public String display() //need all fields, clarify bools
     {
         return getPlayerName() + " " + getFieldPosition() + " " + isStarPlayer() + " " + getSeasonGoals();
     }
@@ -155,63 +153,26 @@ public class Player
         this.starPlayer = starPlayer;
     }
 
-    public String kick()
+    public String[] kick()
     {
         Event event = new Event();
-        String outcome = event.decideOutcome(Math.random(), this.fieldPosition, this.starPlayer);
+        String[] outcome = event.decideOutcome(Math.random(), this.fieldPosition, this.starPlayer);
         
-        if(outcome.startsWith("Goal")) //
+        if(outcome[0].equals("Goal"))
         {
             this.score.addGoal();
             this.incrementSeasonGoals();
         }
-        if(outcome.startsWith("Behind")) //
+        if(outcome[0].equals("Behind"))
         {
             this.score.addBehind();
             this.incrementEffectiveDisposals();
         }
-        if(outcome.startsWith("Pass"))
+        if(outcome[0].equals("Pass"))
             this.incrementEffectiveDisposals();
-        // if(outcome.startsWith("Turnover"))
-        //     this.incrementEffectiveDisposals();
 
         this.incrementKicks();
 
         return outcome;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    // public Outcome play()
-    // {
-    //     //kick()
-    //     //isInjured()
-    //     //updateStats()
-    // }
-
-    // private Outcome kick()
-    // {
-    //     //generate number between 0 and 1. 
-    //     //pass in starPlayer and position get outcome (details in Outcome)
-    // }
-
-    // private boolean isInjured()
-    // {
-    //     //2% chance of injury
-    // }
-
-    private void updateStats()
-    {
-
-    }
-    
 }
