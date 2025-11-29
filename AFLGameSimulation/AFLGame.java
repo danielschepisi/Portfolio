@@ -4,26 +4,24 @@ public class AFLGame
 {
     public static final int MAX_NUMBER_OF_STAR_PLAYERS = 8;
     private final int NUMBER_OF_PERIODS = 4; //??? static
-    public static final int EVENTS_PER_PERIOD = 10;
+    public static final int EVENTS_PER_PERIOD = 1;
 	// private final int EVENTS_PER_PERIOD = 80;
 
     private GameModel gameModel;
-    private Score gameScore;
+    // private Score gameScore;
     private Event[] gameEvents;
-    // private ArrayList<Player> injuredPlayers;
-    // private ArrayList<Player> reportedPlayers;
 
     public AFLGame()
     {
         this.gameModel = new GameModel();
-        this.gameScore = new Score();
+        // this.gameScore = new Score();
         this.gameEvents = new Event[NUMBER_OF_PERIODS * EVENTS_PER_PERIOD];
     }
 
     public AFLGame(GameModel gameModel)
     {
         this.gameModel = gameModel;
-        this.gameScore = new Score();
+        // this.gameScore = new Score();
         this.gameEvents = new Event[NUMBER_OF_PERIODS * EVENTS_PER_PERIOD];
     }
 
@@ -36,11 +34,6 @@ public class AFLGame
     {
         this.gameModel = gameModel;
     }
-
-    // public static int getMaxNumberOfStarPlayers()
-    // {
-    //     return MAX_NUMBER_OF_STAR_PLAYERS;
-    // }
 
     public static void main(String[] args)
     {
@@ -71,20 +64,83 @@ public class AFLGame
 
         game.playGame();
 
+        game.printStatistics();
+
+    }
+
+    private void printLine()
+    {
+        System.out.println("-----------------------");
+    }
+
+    private void print(String text)
+    {
+        System.out.println(text);
+    }
+
+    private void printStatistics()
+    {
+        printLine();
+        printLine();
+        print("Game Over");
+
+        Team winner = getGameModel().getWinningTeam();
+        if (winner == null)
+            print("The game was a draw!");
+        else
+            print("The winner is " + winner.getTeamName());
+        printScore();
+
+        
 
 
+        Statistics stats = new Statistics(getGameEvents(), getGameModel().getTeams());
+        ArrayList<PlayerStats> mostKicks = stats.getMost("Kicks");
+        System.out.println("Players with the most kicks:");
+        for (PlayerStats playerStats : mostKicks) //coupling
+            System.out.println("\t" + playerStats.getPlayer().getPlayerName() + " " + playerStats.getKicks() + " kicks.");
 
+        ArrayList<PlayerStats> mostGoals = stats.getMost("Goals");
+        System.out.println("Players with the most goals:");
+        for (PlayerStats playerStats : mostGoals) //coupling
+            System.out.println("\t" + playerStats.getPlayer().getPlayerName() + " " + playerStats.getKicks() + " goals.");
 
+        System.out.println("Individual Player Stats:");
+        ArrayList<PlayerStats> allPlayerStats = stats.getAllPlayerStats();
+        for(PlayerStats playerStats : allPlayerStats)
+        {
+            StringBuffer playerDisplay = new StringBuffer();
+            playerDisplay.append(playerStats.getPlayer().getPlayerName());
+            playerDisplay.append(" was " + (playerStats.isInjured() ? "" : "not ") + "injured,");
+            playerDisplay.append(" was " + (playerStats.isReported() ? "" : "not ") + "reported, ");
+            playerDisplay.append(playerStats.getKicks() + (playerStats.getKicks() == 1 ? " kick, " : " kicks, "));
+            playerDisplay.append(playerStats.getGoals() + (playerStats.getGoals() == 1 ? " goal " : " goals "));
+            playerDisplay.append("and " + String.format("%.2f", playerStats.getEffectiveDisposals()) + "% effective disposals.");
+            System.out.println("\t" + playerDisplay.toString());
+        }
 
-        // String gamePlayNarrative = game.getGameModel().playGame();
-        // System.out.println(gamePlayNarrative);
+        System.out.println("Injured Players:");
+        ArrayList<Player> injuredPlayers = stats.getInjuredPlayers();
+        for (Player player : injuredPlayers) //coupling
+            System.out.println("\t" + player.getPlayerName());
+
+        System.out.println("Reported Players:");
+        ArrayList<Player> reportedPlayers = stats.getReportedPlayers();
+        for (Player player : reportedPlayers) //coupling
+            System.out.println("\t" + player.getPlayerName());
+
+    }
+
+    public Event[] getGameEvents()
+    {
+        return this.gameEvents;
     }
 
     private void printPeriodStart(int period)
     {
-        System.out.println("-------------------------\n");
+        printLine();
         System.out.println("Quarter: " + period + "\n");
-        System.out.println("-------------------------\n");
+        printLine();
         printScore();
     }
 
@@ -156,11 +212,12 @@ public class AFLGame
                 // }
 
 
-				continueGame = getGameModel().enoughUninjuredPlayers();
+				Team teamWithTooManyInjuires = getGameModel().teamWithoutEnoughPlayers();
 
-				if (!continueGame)
+				if (teamWithTooManyInjuires != null) //and not last event!!!
                 {
-				    System.out.println("Game forfeit!");
+				    System.out.println("Game forfeit by " + teamWithTooManyInjuires.getTeamName());
+                    continueGame = false;
 					break;
                 }
 			}

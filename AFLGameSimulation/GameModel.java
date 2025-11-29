@@ -6,6 +6,7 @@ public class GameModel
     // private final double REPORTED_CHANCE_PER_GAME = 0.01;
     private final double REPORTED_CHANCE_PER_GAME = 0.51;
     private final double INJURED_CHANCE_PER_EVENT = 0.02;
+    // private final double INJURED_CHANCE_PER_EVENT = 0.02;
 
 
     private Team[] teams;
@@ -87,17 +88,35 @@ public class GameModel
         setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers)); //condense?
     }
 
-	public boolean enoughUninjuredPlayers() //name change, check injured players
+	public Team teamWithoutEnoughPlayers() //name change, check injured players
 	{
 		for(Team team : getTeams())
 		{
 			if(team.getActivePlayers().size() < 18)
 			{
-				return false;
+				// return false;
+				return team;
 			}
 		}
 
-		return true;
+		return null;
+	}
+
+	public Team getWinningTeam() //clean up
+	{
+		Team winningTeam = null;
+		Team forfeitTeam = teamWithoutEnoughPlayers();
+		if (forfeitTeam == getTeams()[0])
+			winningTeam = getTeams()[1];
+		if (forfeitTeam == getTeams()[1])
+			winningTeam = getTeams()[0];
+
+		if (getTeams()[0].getScore().getPoints() > getTeams()[1].getScore().getPoints()) //coupling
+			winningTeam = getTeams()[0];
+		if (getTeams()[1].getScore().getPoints() > getTeams()[1].getScore().getPoints())
+			winningTeam = getTeams()[1];
+
+		return winningTeam;
 	}
 
 	private String currentPlayersName()
