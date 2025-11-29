@@ -2,13 +2,29 @@ import java.util.ArrayList;
 
 public class AFLGame
 {
-    private static final int MAX_NUMBER_OF_STAR_PLAYERS = 8;
+    public static final int MAX_NUMBER_OF_STAR_PLAYERS = 8;
+    private final int NUMBER_OF_PERIODS = 4; //??? static
+    public static final int EVENTS_PER_PERIOD = 10;
+	// private final int EVENTS_PER_PERIOD = 80;
 
     private GameModel gameModel;
+    private Score gameScore;
+    private Event[] gameEvents;
+    // private ArrayList<Player> injuredPlayers;
+    // private ArrayList<Player> reportedPlayers;
 
     public AFLGame()
     {
         this.gameModel = new GameModel();
+        this.gameScore = new Score();
+        this.gameEvents = new Event[NUMBER_OF_PERIODS * EVENTS_PER_PERIOD];
+    }
+
+    public AFLGame(GameModel gameModel)
+    {
+        this.gameModel = gameModel;
+        this.gameScore = new Score();
+        this.gameEvents = new Event[NUMBER_OF_PERIODS * EVENTS_PER_PERIOD];
     }
 
     public GameModel getGameModel()
@@ -21,12 +37,12 @@ public class AFLGame
         this.gameModel = gameModel;
     }
 
-    public static int getMaxNumberOfStarPlayers()
-    {
-        return MAX_NUMBER_OF_STAR_PLAYERS;
-    }
+    // public static int getMaxNumberOfStarPlayers()
+    // {
+    //     return MAX_NUMBER_OF_STAR_PLAYERS;
+    // }
 
-    private int askUserForNumberOfStarPlayers()
+    public static void main(String[] args)
     {
         Input consoleReader = new Input();
         Validator validator = new Validator();
@@ -37,35 +53,126 @@ public class AFLGame
             try
             {
                 numberOfStarPlayers = consoleReader.askForIntegerInput("Enter number of star players for each team:"); //too long
-                if (validator.intWithinRange(numberOfStarPlayers, 0, getMaxNumberOfStarPlayers())) //??code elsewhere
+                if (validator.intWithinRange(
+                        numberOfStarPlayers, 0, AFLGame.MAX_NUMBER_OF_STAR_PLAYERS
+                    )) //??code elsewhere
                     proceed = true;
                 else
-                    System.out.println("Please enter an integer from 0 - " + getMaxNumberOfStarPlayers());
+                    System.out.println(
+                        "Please enter an integer from 0 - " + AFLGame.MAX_NUMBER_OF_STAR_PLAYERS);
             }
             catch (Exception e)
             {
-                System.out.println("Please enter an integer from 0 - " + getMaxNumberOfStarPlayers());
+                System.out.println("Please enter an integer from 0 - " + AFLGame.MAX_NUMBER_OF_STAR_PLAYERS);
             }
         } while (proceed == false);
 
-        return numberOfStarPlayers;
+        AFLGame game = new AFLGame(new GameModel(numberOfStarPlayers));
+
+        game.playGame();
+
+
+
+
+
+
+        // String gamePlayNarrative = game.getGameModel().playGame();
+        // System.out.println(gamePlayNarrative);
     }
 
-    public static void main(String[] args)
+    private void printPeriodStart(int period)
     {
-        AFLGame game = new AFLGame();
-        int numberOfStarPlayers = game.askUserForNumberOfStarPlayers();
-        game.setGameModel(new GameModel(numberOfStarPlayers));
-        String gamePlayNarrative = game.getGameModel().playGame();
-        System.out.println(gamePlayNarrative);
+        System.out.println("-------------------------\n");
+        System.out.println("Quarter: " + period + "\n");
+        System.out.println("-------------------------\n");
+        printScore();
     }
 
-    // private void printScore()
-    // {
-    //     //ditch all this, but if not, reduce coupling at least
-    //     System.out.println(teams[0].getTeamName() + ": " + teams[0].displayScore());
-    //     System.out.println(teams[1].getTeamName() + ": " + teams[1].displayScore());
-    // }
+    private void playGame()
+    {
+        int period = 1;
+		boolean continueGame = true;
+
+		do 
+        {
+			printPeriodStart(period);
+					
+			for (int i = 1 ; i <= EVENTS_PER_PERIOD ; i++)
+			{
+                System.out.println("#" + i + "\t");
+                int gameEventNumber = (i-1) + ((period - 1) * EVENTS_PER_PERIOD);
+				Event currentEvent = playEvent();
+				gameEvents[gameEventNumber] = currentEvent;
+
+                Player bouncerWinner = currentEvent.getBounceWinner();
+                if (bouncerWinner != null)
+                    System.out.println(bouncerWinner.getPlayerName() + "\t" + "wins the ball from the bounce"); //strong coupling w player name
+
+                switch (currentEvent.getPlayerKick().getResult()) //styrong coupling
+                {
+                    case "Goal":
+                        //assign goal
+                        System.out.println("Goal");
+                        break;
+                    case "Behind":
+                        //assign behind
+                        System.out.println("Behind");
+                        break;
+                    case "Pass":
+                        //print what needed including who to
+                        System.out.println("Pass");
+                        break;
+                    case "Turnover":
+                        //print what needed including who to
+                        System.out.println("Turnover");
+                        break;
+                    default:
+                        //something went wrong
+                    break;
+                }
+
+                Player injuredPlayer = currentEvent.getInjuredPlayer();
+                if (injuredPlayer != null)
+                    System.out.println(injuredPlayer.getPlayerName() + "\t" + "was injured"); //strong coupling w player name
+                    
+                ArrayList<Player> reportedPlayers = currentEvent.getReportedPlayers();
+                if (reportedPlayers != null)
+                {
+                    for (Player player : reportedPlayers)
+                    {
+                        System.out.println(player.getPlayerName() + "\t" + "was reported"); //strong coupling w player name
+                    }
+                }
+
+
+				continueGame = getGameModel().enoughUninjuredPlayers();
+
+				if (!continueGame)
+                {
+				    System.out.println("Game forfeit!");
+					break;
+                }
+			}
+
+			getGameModel().setPlayerWithPossession(null); //review
+			getGameModel().setTeamWithPossession(null); //review
+
+			period++;
+		} while (period <= NUMBER_OF_PERIODS && continueGame);
+    }
+
+    private Event playEvent()
+    {
+        return getGameModel().playEvent();
+    }
+
+
+    private void printScore()
+    {
+        // //ditch all this, but if not, reduce coupling at least
+        // System.out.println(teams[0].getTeamName() + ": " + getScore().display(););
+        // System.out.println(teams[1].getTeamName() + ": " + teams[1].displayScore());
+    }
 
     // public void endGame(boolean forfeit)
     // {

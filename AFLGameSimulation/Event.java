@@ -1,137 +1,70 @@
+import java.util.ArrayList;
+
 public class Event
 {
-    public Event()
-    {
+	private Player bouncerWinner;
+	private Player injuredPlayer;
+	private PlayerKick playerKick;
+	private Player receivingPlayer;
+	private ArrayList<Player> reportedPlayers;
 
-    }
+	public Event()
+	{
 
-    public String[] decideOutcome(String fieldPosition, boolean isStarPlayer) //move rand into here?
-    {
-        Double rand = Math.random();
-        String[] outcome = new String[2];
-        if (isStarPlayer)
-        {
-            switch (fieldPosition)
-            {
-                case "Forward":
-                    if (rand < 0.45)
-                        outcome[0] = "Goal";
-                    else if (rand < 0.85)
-                        outcome[0] = "Behind";
-                    else if (rand < 0.95)
-                    {
-                        outcome[0] = "Pass";
-                        outcome[1] = "Forward";
-                    }
-                    else
-                    {
-                        outcome[0] = "Turnover";
-                        outcome[1] = "Defender";
-                    }
-                    break;
+	}
 
-                case "Midfielder":
-                    if (rand < 0.10)
-                        outcome[0] = "Goal";
-                    else if (rand < 0.20)
-                        outcome[0] = "Behind";
-                    else if (rand < 0.55)
-                    {
-                        outcome[0] = "Pass";
-                        outcome[1] = "Forward";
-                    }
-                    else if (rand < 0.90)
-                    {
-                        outcome[0] = "Pass";
-                        outcome[1] = "Midfielder";
-                    }
-                    else
-                    {
-                        outcome[0] = "Turnover";
-                        outcome[1] = "Midfielder";
-                    }
-                    break;
+	public void addReportedPlayer(Player reported)
+	{
+		getReportedPlayers().add(reported);
+	}
 
-                case "Defender":
-                    if (rand < 0.95)
-                    {
-                        outcome[0] = "Pass";
-                        outcome[1] = "Midfielder";
-                    }
-                    else
-                    {
-                        outcome[0] = "Turnover";
-                        outcome[1] = "Forward";
-                    }
-                    break;
+	public Player getBounceWinner()
+	{
+		return this.bouncerWinner;
+	}
 
-                default:
-                    //something went wrong
-                    break;
-            }
-        }
-        else 
-        {
-            switch (fieldPosition)
-            {
-                case "Forward":
-                    if (rand < 0.30)
-                        outcome[0] = "Goal";
-                    else if (rand < 0.70)
-                        outcome[0] = "Behind";
-                    else if (rand < 0.90)
-                    {
-                        outcome[0] = "Pass";
-                        outcome[1] = "Forward";
-                    }
-                    else
-                    {
-                        outcome[0] = "Turnover";
-                        outcome[1] = "Defender";
-                    }
-                    break;
+	public Player getInjuredPlayer()
+	{
+		return this.injuredPlayer;
+	}
 
-                case "Midfielder":
-                    if (rand < 0.05)
-                        outcome[0] = "Goal";
-                    else if (rand < 0.15)
-                        outcome[0] = "Behind";
-                    else if (rand < 0.45)
-                    {
-                        outcome[0] = "Pass";
-                        outcome[1] = "Forward";
-                    }
-                    else if (rand < 0.75)
-                    {
-                        outcome[0] = "Pass";
-                        outcome[1] = "Midfielder";
-                    }
-                    else
-                    {
-                        outcome[0] = "Turnover";
-                        outcome[1] = "Midfielder";
-                    }
-                    break;
+	public PlayerKick getPlayerKick()
+	{
+		return this.playerKick;
+	}
 
-                case "Defender":
-                    if (rand < 0.80)
-                    {
-                        outcome[0] = "Pass";
-                        outcome[1] = "Midfielder";
-                    }
-                    else
-                    {
-                        outcome[0] = "Turnover";
-                        outcome[1] = "Forward";
-                    }
-                    break;
+	public Player getReceivingPlayer()
+	{
+		return this.receivingPlayer;
+	}
 
-                default:
-                    //something went wrong
-                    break;
-            }
-        }
+	public ArrayList<Player> getReportedPlayers()
+	{
+		return this.reportedPlayers;
+	}
 
-        return outcome;
-    }
+	public void setBounceWinner(Player winner)
+	{
+		this.bouncerWinner = winner;
+	}
+
+	public void setInjuredPlayer(Player injured)
+	{
+		this.injuredPlayer = injured;
+	}
+
+	public void setPlayerKick(PlayerKick kick)
+	{
+		this.playerKick = kick;
+	}
+
+	public void setReceivingPlayer(Player player)
+	{
+		this.receivingPlayer = player;
+	}
+
+	public void setReportedPlayers(ArrayList<Player> players)
+	{
+		this.reportedPlayers = players;
+	}
 }

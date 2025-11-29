@@ -4,11 +4,8 @@ import java.util.Collections;
 public class Team
 {
     private String teamName;
-    private Score score; //do we move this??
+    private Score score;
     private ArrayList<Player> players;
-
-
-// move score and injure players and stats
 
     public Team()
     {

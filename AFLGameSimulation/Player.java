@@ -153,26 +153,26 @@ public class Player
         this.starPlayer = starPlayer;
     }
 
-    public String[] kick()
+    public PlayerKick kick()
     {
-        Event event = new Event();
-        String[] outcome = event.decideOutcome(this.fieldPosition, this.starPlayer);
+        PlayerKick event = new PlayerKick(getFieldPosition(), isStarPlayer());
+        // String[] outcome = event.decideOutcome(this.fieldPosition, this.starPlayer);
         
-        if(outcome[0].equals("Goal"))
-        {
-            this.score.addGoal();
-            this.incrementSeasonGoals();
-        }
-        if(outcome[0].equals("Behind"))
-        {
-            this.score.addBehind();
-            this.incrementEffectiveDisposals();
-        }
-        if(outcome[0].equals("Pass"))
-            this.incrementEffectiveDisposals();
+        // if(outcome[0].equals("Goal"))
+        // {
+        //     this.score.addGoal();
+        //     this.incrementSeasonGoals();
+        // }
+        // if(outcome[0].equals("Behind"))
+        // {
+        //     this.score.addBehind();
+        //     this.incrementEffectiveDisposals();
+        // }
+        // if(outcome[0].equals("Pass"))
+        //     this.incrementEffectiveDisposals();
 
-        this.incrementKicks();
+        // this.incrementKicks();
 
-        return outcome;
+        return event;
     }
 }

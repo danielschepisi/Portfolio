@@ -1,23 +1,21 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
-
 public class GameModel
 {
     private final double REPORTED_CHANCE_PER_GAME = 0.01;
     private final double INJURED_CHANCE_PER_EVENT = 0.02;
-	private final int EVENTS_PER_QUARTER = 10;
-	// private final int EVENTS_PER_QUARTER = 80;
+
 
     private Team[] teams;
-	private StringBuffer gamePlayNarrative;
+	// private StringBuffer gamePlayNarrative;
 
 	private Player playerWithPossession;
 	private Team teamWithPossession;
 
     public GameModel()
     {
-		this.gamePlayNarrative = new StringBuffer();
+		// this.gamePlayNarrative = new StringBuffer();
     }
 
     public GameModel(int starPlayers)
@@ -26,22 +24,22 @@ public class GameModel
 		createTeams(starPlayers); //******* not sure about this constructor combo
     }
 
-	private Player getPlayerWithPossession()
+	public Player getPlayerWithPossession()
 	{
 		return this.playerWithPossession;
 	}
 
-	private Team getTeamWithPossession()
+	public Team getTeamWithPossession()
 	{
 		return this.teamWithPossession;
 	}
 
-	private void setPlayerWithPossession(Player player)
+	public void setPlayerWithPossession(Player player)
 	{
 		this.playerWithPossession = player;
 	}
 
-	private void setTeamWithPossession(Team team)
+	public void setTeamWithPossession(Team team)
 	{
 		this.teamWithPossession = team;
 	}
@@ -64,7 +62,7 @@ public class GameModel
 
     private double chanceOfBeingReportedPerEvent()
     {
-        return REPORTED_CHANCE_PER_GAME / EVENTS_PER_QUARTER / 4;
+        return REPORTED_CHANCE_PER_GAME / AFLGame.EVENTS_PER_PERIOD / 4; //FIX THIS EVENTS_PER_PERIOD
     }
 
 	private void swapTeams() //maybe call turnover
@@ -88,45 +86,12 @@ public class GameModel
         setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers)); //condense?
     }
 
-	public String playGame()
-	{
-		int quarter = 1;
-		boolean continueGame = true;
-
-		do 
-        {
-			//could all this quarter stuff go to. a method
-			gamePlayNarrative.append("-------------------------\n"); //will have to changea ll these to get
-			gamePlayNarrative.append("Quarter: " + quarter + "\n");
-			gamePlayNarrative.append("-------------------------\n");
-			gamePlayNarrative.append("ADD SCORE XXXXXXXXXXXXXXXX\n"); //*******
-			gamePlayNarrative.append("ADD SCORE XXXXXXXXXXXXXXXX\n"); //*******
-					
-			for (int i = 1 ; i <= EVENTS_PER_QUARTER ; i++)
-			{
-				gamePlayNarrative.append("#" + i + "\t");
-				playEvent();
-				continueGame = enoughUninjuredPlayers();
-				if (!continueGame)
-					break;
-			}
-
-			setPlayerWithPossession(null);
-			setTeamWithPossession(null);
-
-			quarter++;
-		} while (quarter <= 4 && continueGame);
-
-		return gamePlayNarrative.toString();
-	}
-
-	private boolean enoughUninjuredPlayers() //name change, check injured players
+	public boolean enoughUninjuredPlayers() //name change, check injured players
 	{
 		for(Team team : getTeams())
 		{
 			if(team.getActivePlayers().size() < 18)
 			{
-				gamePlayNarrative.append("Game forfeit!\n");
 				return false;
 			}
 		}
@@ -139,68 +104,65 @@ public class GameModel
 		return getPlayerWithPossession().getPlayerName();
 	}
 
-	private void playEvent()
+	public Event playEvent()
 	{
+		Event currentEvent = new Event();
 		if (getPlayerWithPossession() == null)
 		{
 			setTeamWithPossession(pickRandomTeam()); 
 			setPlayerWithPossession(
 				getTeamWithPossession().chooseRandomPlayerFromPosition("Midfielder")
 			);
-			gamePlayNarrative
-			.append(currentPlayersName() + "\t" + "Wins the ball from the bounce"+ "\n\t");
+			currentEvent.setBounceWinner(getPlayerWithPossession());
 		}
 
-		String[] eventOutcome = getPlayerWithPossession().kick();
+		PlayerKick playerKick = getPlayerWithPossession().kick();
+		currentEvent.setPlayerKick(playerKick);
 
-		// gamePlayNarrative.append(player.getPlayerName() + "\t" + eventOutcome[0] + eventOutcome[1] + "\n"); //too long? //must deal with pritn statements. this has nulls
-
-		switch (eventOutcome[0]) //watch for validation on assigning from teams
+		switch (playerKick.getResult()) //watch for validation on assigning from teams
 		{
 			case "Goal":
-				gamePlayNarrative.append(currentPlayersName() + "\t" + "Scores a goal!"+ "\n");
 				//assign goal
 				getTeamWithPossession().scoreGoal();
-				// this.printScore();
 				setPlayerWithPossession(null);
 				break;
 			case "Behind":
-				gamePlayNarrative.append(currentPlayersName() + "\t" + "Scores a behind."+ "\n");
 				// assign behind
 				getTeamWithPossession().scoreBehind();
-				// this.printScore();
 				swapTeams();
 				setPlayerWithPossession(
 					getTeamWithPossession().chooseRandomPlayerFromPosition("Defender")
 				);
 				break;
 			case "Pass":
-				gamePlayNarrative
-				.append(currentPlayersName() + "\t" + "Passes to " + eventOutcome[1].toLowerCase());
 				setPlayerWithPossession(
 					getTeamWithPossession()
-						.chooseRandomPlayerFromPositionExcluding(eventOutcome[1], getPlayerWithPossession())
+						.chooseRandomPlayerFromPositionExcluding(
+							playerKick.getToFieldPosition(), getPlayerWithPossession()
+						)
 				);
-				gamePlayNarrative.append(" " + currentPlayersName() + "\n");
+				currentEvent.setReceivingPlayer(getPlayerWithPossession());
 				break;
 			case "Turnover":
-				gamePlayNarrative
-				.append(currentPlayersName() + "\t" + "Turns over to " + eventOutcome[1].toLowerCase());
 				swapTeams();
 				setPlayerWithPossession(
-					getTeamWithPossession().chooseRandomPlayerFromPosition(eventOutcome[1]));
-				gamePlayNarrative.append(" " + currentPlayersName() + "\n");
+					getTeamWithPossession()
+						.chooseRandomPlayerFromPosition(playerKick.getToFieldPosition())
+				);
+				currentEvent.setReceivingPlayer(getPlayerWithPossession());
 				break;
 			default:
 				//something went wrong
 				break;     
 		}
 
-		injurePlayers();
-		reportPlayers();
+		injurePlayers(currentEvent);
+		reportPlayers(currentEvent);
+
+		return currentEvent;
 	}
 
-	private void injurePlayers()
+	private void injurePlayers(Event currentEvent)
 	{
 		if(Math.random() < INJURED_CHANCE_PER_EVENT)
 		{
@@ -212,12 +174,12 @@ public class GameModel
 				Player injuredPlayer = activePlayers.get(0);
 				injuredPlayer.injure();
 				team.replacePlayer(injuredPlayer);
-				gamePlayNarrative.append("\t" + injuredPlayer.getPlayerName() + " was injured.\n");
+				currentEvent.setInjuredPlayer(injuredPlayer);
 			}
 		}
 	}
 
-	private void reportPlayers()
+	private void reportPlayers(Event currentEvent)
 	{
 		for(Team team : getTeams())
 		{
@@ -226,7 +188,7 @@ public class GameModel
 				if(Math.random() < chanceOfBeingReportedPerEvent())
 				{
 					player.setIsReported(true); //maybe chagne to report
-					gamePlayNarrative.append("\t" + player.getPlayerName() + " was reported.\n");
+					currentEvent.addReportedPlayer(player);
 				}
 			}
 		}
