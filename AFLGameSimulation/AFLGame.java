@@ -124,10 +124,12 @@ public class AFLGame
                     case "Goal":
                         //assign goal
                         System.out.println(playerName + " kicks a goals! 6 points!");
+                        printScore();
                         break;
                     case "Behind":
                         //assign behind
                         System.out.println(playerName + " kicks a behind, 1 point.");
+                        printScore();
                         break;
                     case "Pass":
                         System.out.println(playerName + " passes the ball to " + newPlayerPosition + " " + newPlayerName + ".");
@@ -178,9 +180,9 @@ public class AFLGame
 
     private void printScore()
     {
-        // //ditch all this, but if not, reduce coupling at least
-        // System.out.println(teams[0].getTeamName() + ": " + getScore().display(););
-        // System.out.println(teams[1].getTeamName() + ": " + teams[1].displayScore());
+        // reduce coupling at least
+        System.out.println(getGameModel().getTeams()[0].getTeamName() + ": " + getGameModel().getTeams()[0].getScore().display());
+        System.out.println(getGameModel().getTeams()[1].getTeamName() + ": " + getGameModel().getTeams()[1].displayScore());
     }
 
     // public void endGame(boolean forfeit)
