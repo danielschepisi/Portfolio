@@ -1,44 +1,68 @@
 public class Event
 {
-    //constructor
-
-    public String decideOutcome(double rand, String fieldPosition, boolean isStarPlayer) //move rand into here?
+    public Event()
     {
-        String outcome = "";
+
+    }
+
+    public String[] decideOutcome(double rand, String fieldPosition, boolean isStarPlayer) //move rand into here?
+    {
+        String[] outcome = new String[2];
         if (isStarPlayer)
         {
-            switch (fieldPosition.toLowerCase())
+            switch (fieldPosition)
             {
-                case "forward":
+                case "Forward":
                     if (rand < 0.45)
-                        outcome = "Goal";
+                        outcome[0] = "Goal";
                     else if (rand < 0.85)
-                        outcome = "Behind";
+                        outcome[0] = "Behind";
                     else if (rand < 0.95)
-                        outcome = "Pass Forward";
+                    {
+                        outcome[0] = "Pass";
+                        outcome[1] = "Forward";
+                    }
                     else
-                        outcome = "Turnover Defender";
-                        break;
+                    {
+                        outcome[0] = "Turnover";
+                        outcome[1] = "Defender";
+                    }
+                    break;
 
-                case "midfielder":
+                case "Midfielder":
                     if (rand < 0.10)
-                        outcome = "Goal";
+                        outcome[0] = "Goal";
                     else if (rand < 0.20)
-                        outcome = "Behind";
+                        outcome[0] = "Behind";
                     else if (rand < 0.55)
-                        outcome = "Pass Forward";
+                    {
+                        outcome[0] = "Pass";
+                        outcome[1] = "Forward";
+                    }
                     else if (rand < 0.90)
-                        outcome = "Pass Midfielder";
+                    {
+                        outcome[0] = "Pass";
+                        outcome[1] = "Midfielder";
+                    }
                     else
-                        outcome = "Turnover Midfielder";
-                        break;
+                    {
+                        outcome[0] = "Turnover";
+                        outcome[1] = "Midfielder";
+                    }
+                    break;
 
-                case "defender":
+                case "Defender":
                     if (rand < 0.95)
-                        outcome = "Pass Midfielder";
+                    {
+                        outcome[0] = "Pass";
+                        outcome[1] = "Midfielder";
+                    }
                     else
-                        outcome = "Turnover Forward";
-                        break;
+                    {
+                        outcome[0] = "Turnover";
+                        outcome[1] = "Forward";
+                    }
+                    break;
 
                 default:
                     //something went wrong
@@ -47,47 +71,66 @@ public class Event
         }
         else 
         {
-            switch (fieldPosition.toLowerCase())
+            switch (fieldPosition)
             {
-                case "forward":
+                case "Forward":
                     if (rand < 0.30)
-                        outcome = "Goal";
+                        outcome[0] = "Goal";
                     else if (rand < 0.70)
-                        outcome = "Behind";
+                        outcome[0] = "Behind";
                     else if (rand < 0.90)
-                        outcome = "Pass Forward";
+                    {
+                        outcome[0] = "Pass";
+                        outcome[1] = "Forward";
+                    }
                     else
-                        outcome = "Turnover Defender";
-                        break;
+                    {
+                        outcome[0] = "Turnover";
+                        outcome[1] = "Defender";
+                    }
+                    break;
 
-                case "midfielder":
+                case "Midfielder":
                     if (rand < 0.05)
-                        outcome = "Goal";
+                        outcome[0] = "Goal";
                     else if (rand < 0.15)
-                        outcome = "Behind";
+                        outcome[0] = "Behind";
                     else if (rand < 0.45)
-                        outcome = "Pass Forward";
+                    {
+                        outcome[0] = "Pass";
+                        outcome[1] = "Forward";
+                    }
                     else if (rand < 0.75)
-                        outcome = "Pass Midfielder";
+                    {
+                        outcome[0] = "Pass";
+                        outcome[1] = "Midfielder";
+                    }
                     else
-                        outcome = "Turnover Midfielder";
-                        break;
+                    {
+                        outcome[0] = "Turnover";
+                        outcome[1] = "Midfielder";
+                    }
+                    break;
 
-                case "defender":
+                case "Defender":
                     if (rand < 0.80)
-                        outcome = "Pass Midfielder";
+                    {
+                        outcome[0] = "Pass";
+                        outcome[1] = "Midfielder";
+                    }
                     else
-                        outcome = "Turnover Forward";
-                        break;
+                    {
+                        outcome[0] = "Turnover";
+                        outcome[1] = "Forward";
+                    }
+                    break;
 
                 default:
                     //something went wrong
                     break;
             }
-
         }
 
         return outcome;
     }
-
 }
