@@ -5,8 +5,9 @@ public class Event
 
     }
 
-    public String[] decideOutcome(double rand, String fieldPosition, boolean isStarPlayer) //move rand into here?
+    public String[] decideOutcome(String fieldPosition, boolean isStarPlayer) //move rand into here?
     {
+        Double rand = Math.random();
         String[] outcome = new String[2];
         if (isStarPlayer)
         {

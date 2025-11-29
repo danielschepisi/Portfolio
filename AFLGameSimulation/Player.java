@@ -156,7 +156,7 @@ public class Player
     public String[] kick()
     {
         Event event = new Event();
-        String[] outcome = event.decideOutcome(Math.random(), this.fieldPosition, this.starPlayer);
+        String[] outcome = event.decideOutcome(this.fieldPosition, this.starPlayer);
         
         if(outcome[0].equals("Goal"))
         {

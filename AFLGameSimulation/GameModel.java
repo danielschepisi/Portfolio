@@ -12,6 +12,9 @@ public class GameModel
     private Team[] teams;
 	private StringBuffer gamePlayNarrative;
 
+	private Player playerWithPossession;
+	private Team teamWithPossession;
+
     public GameModel()
     {
 		this.gamePlayNarrative = new StringBuffer();
@@ -22,6 +25,26 @@ public class GameModel
     	this();
 		createTeams(starPlayers); //******* not sure about this constructor combo
     }
+
+	private Player getPlayerWithPossession()
+	{
+		return this.playerWithPossession;
+	}
+
+	private Team getTeamWithPossession()
+	{
+		return this.teamWithPossession;
+	}
+
+	private void setPlayerWithPossession(Player player)
+	{
+		this.playerWithPossession = player;
+	}
+
+	private void setTeamWithPossession(Team team)
+	{
+		this.teamWithPossession = team;
+	}
 
 	public void setTeams(Team[] teams)
     {
@@ -44,12 +67,12 @@ public class GameModel
         return REPORTED_CHANCE_PER_GAME / EVENTS_PER_QUARTER / 4;
     }
 
-	private void swapTeamsFrom(Team team) //maybe call turnover
+	private void swapTeams() //maybe call turnover
     {
-        if (getTeams()[0] == team)
-            team = teams[1];
+        if (getTeams()[0] == getTeamWithPossession())
+            setTeamWithPossession(teams[1]);
         else
-            team = teams[0];
+            setTeamWithPossession(teams[0]);
     }
 
 	private final void createTeams(int starPlayers)
@@ -72,10 +95,7 @@ public class GameModel
 
 		do 
         {
-			Player playerWithPossession = null;
-			Team teamWithPossession = null;
-
-			//could all this quarter stuff go to. amethod
+			//could all this quarter stuff go to. a method
 			gamePlayNarrative.append("-------------------------\n"); //will have to changea ll these to get
 			gamePlayNarrative.append("Quarter: " + quarter + "\n");
 			gamePlayNarrative.append("-------------------------\n");
@@ -85,11 +105,14 @@ public class GameModel
 			for (int i = 1 ; i <= EVENTS_PER_QUARTER ; i++)
 			{
 				gamePlayNarrative.append("#" + i + "\t");
-				playEvent(playerWithPossession, teamWithPossession);
+				playEvent();
 				continueGame = enoughUninjuredPlayers();
 				if (!continueGame)
 					break;
 			}
+
+			setPlayerWithPossession(null);
+			setTeamWithPossession(null);
 
 			quarter++;
 		} while (quarter <= 4 && continueGame);
@@ -111,47 +134,62 @@ public class GameModel
 		return true;
 	}
 
-	private void playEvent(Player player, Team team)
+	private String currentPlayersName()
 	{
-		if (player == null)
+		return getPlayerWithPossession().getPlayerName();
+	}
+
+	private void playEvent()
+	{
+		if (getPlayerWithPossession() == null)
 		{
-			team = pickRandomTeam(); 
-			player = team.chooseRandomPlayerFromPosition("Midfielder");
+			setTeamWithPossession(pickRandomTeam()); 
+			setPlayerWithPossession(
+				getTeamWithPossession().chooseRandomPlayerFromPosition("Midfielder")
+			);
+			gamePlayNarrative
+			.append(currentPlayersName() + "\t" + "Wins the ball from the bounce"+ "\n\t");
 		}
 
-		String[] eventOutcome = player.kick();
+		String[] eventOutcome = getPlayerWithPossession().kick();
 
 		// gamePlayNarrative.append(player.getPlayerName() + "\t" + eventOutcome[0] + eventOutcome[1] + "\n"); //too long? //must deal with pritn statements. this has nulls
 
 		switch (eventOutcome[0]) //watch for validation on assigning from teams
 		{
 			case "Goal":
-				gamePlayNarrative.append(player.getPlayerName() + "\t" + "Scores a goal!"+ "\n");
+				gamePlayNarrative.append(currentPlayersName() + "\t" + "Scores a goal!"+ "\n");
 				//assign goal
-				team.scoreGoal();
+				getTeamWithPossession().scoreGoal();
 				// this.printScore();
-				player = null;
+				setPlayerWithPossession(null);
 				break;
 			case "Behind":
-				gamePlayNarrative.append(player.getPlayerName() + "\t" + "Scores a behind."+ "\n");
+				gamePlayNarrative.append(currentPlayersName() + "\t" + "Scores a behind."+ "\n");
 				// assign behind
-				team.scoreBehind();
+				getTeamWithPossession().scoreBehind();
 				// this.printScore();
-				swapTeamsFrom(team);
-				player = team.chooseRandomPlayerFromPosition("Defender");;
+				swapTeams();
+				setPlayerWithPossession(
+					getTeamWithPossession().chooseRandomPlayerFromPosition("Defender")
+				);
 				break;
 			case "Pass":
 				gamePlayNarrative
-				.append(player.getPlayerName() + "\t" + "Passes to " + eventOutcome[1].toLowerCase());
-				player = team.chooseRandomPlayerFromPositionExcluding(eventOutcome[1], player);
-				gamePlayNarrative.append(" " + player.getPlayerName() + "\n");
+				.append(currentPlayersName() + "\t" + "Passes to " + eventOutcome[1].toLowerCase());
+				setPlayerWithPossession(
+					getTeamWithPossession()
+						.chooseRandomPlayerFromPositionExcluding(eventOutcome[1], getPlayerWithPossession())
+				);
+				gamePlayNarrative.append(" " + currentPlayersName() + "\n");
 				break;
 			case "Turnover":
 				gamePlayNarrative
-				.append(player.getPlayerName() + "\t" + "Turns over to " + eventOutcome[1].toLowerCase());
-				swapTeamsFrom(team);
-				player = team.chooseRandomPlayerFromPosition(eventOutcome[1]);
-				gamePlayNarrative.append(" " + player.getPlayerName() + "\n");
+				.append(currentPlayersName() + "\t" + "Turns over to " + eventOutcome[1].toLowerCase());
+				swapTeams();
+				setPlayerWithPossession(
+					getTeamWithPossession().chooseRandomPlayerFromPosition(eventOutcome[1]));
+				gamePlayNarrative.append(" " + currentPlayersName() + "\n");
 				break;
 			default:
 				//something went wrong
