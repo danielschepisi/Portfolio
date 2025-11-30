@@ -31,6 +31,11 @@ public class PlayerKick
         this.player = player;
     }
 
+    public String getPlayerName()
+    {
+        return getPlayer().getPlayerName();
+    }
+
     public String getToFieldPosition()
     {
         return this.toFieldPosition;

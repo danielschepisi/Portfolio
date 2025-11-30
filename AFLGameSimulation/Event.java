@@ -23,6 +23,16 @@ public class Event
 		return this.bouncerWinner;
 	}
 
+	public String getKickingPlayerName()
+	{
+		return getPlayerKick().getPlayerName();
+	}
+
+	public String getResult()
+	{
+		return getPlayerKick().getResult();
+	}
+
 	public Player getInjuredPlayer()
 	{
 		return this.injuredPlayer;

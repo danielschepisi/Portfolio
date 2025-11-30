@@ -26,6 +26,12 @@ public class GameModel
 		return this.playerWithPossession;
 	}
 
+	public String getTeamNameForTeam(Team team)
+	{
+		int index = (team == getTeams()[0]) ? 0 : 1;
+		return getTeams()[index].getTeamName();
+	}
+
 	public Team getTeamWithPossession()
 	{
 		return this.teamWithPossession;
@@ -197,6 +203,13 @@ public class GameModel
 			}
 		}
 	}
+
+	public String displayScoreForTeam(Team team)
+	{
+		int index = (team == getTeams()[0]) ? 0 : 1;
+		return getTeams()[index].displayScore();
+	}
+
 
 	private void reportPlayers(Event currentEvent)
 	{

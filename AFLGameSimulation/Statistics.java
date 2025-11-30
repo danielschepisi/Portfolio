@@ -49,7 +49,7 @@ public class Statistics
 		this.allPlayerStats = allPlayerStats;
 	}
 
-	public ArrayList<PlayerStats> getMost(String field)
+	public ArrayList<PlayerStats> getHighlights(String field)
 	{
 		ArrayList<PlayerStats> team1PlayerStats = new ArrayList<PlayerStats>();
 		ArrayList<PlayerStats> team2PlayerStats = new ArrayList<PlayerStats>();
@@ -73,8 +73,38 @@ public class Statistics
 				returnPlayerStats.addAll(getMostGoalsFrom(team1PlayerStats));
 				returnPlayerStats.addAll(getMostGoalsFrom(team2PlayerStats));
 				break;
+			case "Injuries":
+				returnPlayerStats = getInjuriedPlayerStats();
+				break;
+			case "Reported":
+				returnPlayerStats = getReportedPlayerStats();
+				break;
 		}
 					
+		return returnPlayerStats;
+	}
+
+	private ArrayList<PlayerStats> getInjuriedPlayerStats()
+	{
+		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
+		for (PlayerStats playerStat : getAllPlayerStats())
+		{
+			if (playerStat.isInjured())
+				returnPlayerStats.add(playerStat);
+		}
+
+		return returnPlayerStats;
+	}
+
+	private ArrayList<PlayerStats> getReportedPlayerStats()
+	{
+		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
+		for (PlayerStats playerStat : getAllPlayerStats())
+		{
+			if (playerStat.isReported())
+				returnPlayerStats.add(playerStat);
+		}
+
 		return returnPlayerStats;
 	}
 
@@ -118,37 +148,37 @@ public class Statistics
 		return returnPlayerStats;
 	}
 
-	public ArrayList<Player> getReportedPlayers()
-	{
-		ArrayList<Player> reportedPlayers = new ArrayList<Player>();
+	// public ArrayList<Player> getReportedPlayers()
+	// {
+	// 	ArrayList<Player> reportedPlayers = new ArrayList<Player>();
 
-		for (Team team : getTeams())
-		{
-			for (Player player : team.getPlayers())
-			{
-				if (player.isReported())
-					reportedPlayers.add(player);
-			}
-		}
+	// 	for (Team team : getTeams())
+	// 	{
+	// 		for (Player player : team.getPlayers())
+	// 		{
+	// 			if (player.isReported())
+	// 				reportedPlayers.add(player);
+	// 		}
+	// 	}
 
-		return reportedPlayers;
-	}
+	// 	return reportedPlayers;
+	// }
 
-	public ArrayList<Player> getInjuredPlayers()
-	{
-		ArrayList<Player> injuredPlayers = new ArrayList<Player>();
+	// public ArrayList<Player> getInjuredPlayers()
+	// {
+	// 	ArrayList<Player> injuredPlayers = new ArrayList<Player>();
 
-		for (Team team : getTeams())
-		{
-			for (Player player : team.getPlayers())
-			{
-				if (player.isInjured())
-					injuredPlayers.add(player);
-			}
-		}
+	// 	for (Team team : getTeams())
+	// 	{
+	// 		for (Player player : team.getPlayers())
+	// 		{
+	// 			if (player.isInjured())
+	// 				injuredPlayers.add(player);
+	// 		}
+	// 	}
 
-		return injuredPlayers;
-	}
+	// 	return injuredPlayers;
+	// }
 
 	private final void createAllPlayerStats()
 	{
