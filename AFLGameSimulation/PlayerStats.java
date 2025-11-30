@@ -1,23 +1,25 @@
 public class PlayerStats
 {
-	private Player player;
-	private String name;
-	private Team team;
-	private int kicks;
-	private int goals;
 	private int behinds;
-	private int passes;
-	private int turnovers;
+	private double effectiveDisposals;
+	private int goals;
 	private boolean isInjured;
 	private boolean isReported;
-	private double effectiveDisposals;
-
+	private int kicks;
+	private String name;
+	private int passes;
+	private Player player;
+	private Team team;
+	private int turnovers;
+	
+	
 	public PlayerStats()
 	{
 
 	}
 
-    public PlayerStats(Player player, Team team) {
+    public PlayerStats(Player player, Team team) 
+	{
         this.player = player;
 		this.name = player.getPlayerName();
 		this.team = team;
@@ -28,16 +30,6 @@ public class PlayerStats
         this.isReported = false;
         this.effectiveDisposals = 0.0;
     }
-
-	public Team getTeam()
-	{
-		return this.team;
-	}
-
-	public void setTeam(Team team)
-	{
-		this.team = team;
-	}
 
 	public void add(String field)
 	{
@@ -70,9 +62,48 @@ public class PlayerStats
 		}
 	}
 
-	public String display() //add the rest
+	private void calculateEffectDisposals()
 	{
-		return getKicks() + " " + getGoals();
+		setEffectiveDisposals((double)(getGoals() + getPasses() + getBehinds()) * 100 / (double)getKicks());
+	}
+
+	public String display()
+	{
+		return "Name: " + getName()
+			+ " Kicks: " + getKicks()
+			+ " Goals: " + getGoals()
+			+ " Behinds: " + getBehinds()
+			+ " EffectiveDisposals: " + getEffectiveDisposals()
+			+ " Injured : " + isInjured()
+			+ " Reported: " + isReported()
+			+ " Team: " + getTeam()
+			+ " Passes: " + getPasses()
+			+ " Turnover: " + getTurnovers();
+	}
+
+    public int getBehinds()
+	{
+        return this.behinds;
+    }
+
+	public double getEffectiveDisposals()
+	{
+        return this.effectiveDisposals;
+    }
+
+	public int getGoals()
+	{
+        return this.goals;
+    }
+
+    public int getKicks()
+	{
+        return this.kicks;
+    }
+
+	public String getName()
+	{
+		return this.name;
 	}
 
 	public int getPasses()
@@ -80,15 +111,58 @@ public class PlayerStats
 		return this.passes;
 	}
 
+    public Player getPlayer()
+	{
+        return this.player;
+    }
+
+	public Team getTeam()
+	{
+		return this.team;
+	}
+
 	public int getTurnovers()
 	{
 		return this.turnovers;
 	}
 
-	public String getName()
+    public boolean isInjured()
 	{
-		return this.name;
-	}
+        return this.isInjured;
+    }
+
+    public boolean isReported()
+	{
+        return this.isReported;
+    }
+
+    public void setBehinds(int behinds)
+	{
+        this.behinds = behinds;
+		calculateEffectDisposals();
+    }
+
+    public void setEffectiveDisposals(double effectiveDisposals)
+	{
+        this.effectiveDisposals = effectiveDisposals;
+    }
+
+    public void setGoals(int goals)
+	{
+        this.goals = goals;
+		calculateEffectDisposals();
+    }
+
+	public void setInjured(boolean injured)
+	{ 
+        this.isInjured = injured;
+    }
+
+    public void setKicks(int kicks)
+	{
+        this.kicks = kicks;
+		calculateEffectDisposals();
+    }
 
 	public void setName(String name)
 	{
@@ -101,68 +175,9 @@ public class PlayerStats
 		calculateEffectDisposals();
 	}
 
-	public void setTurnovers(int turnover)
-	{
-		this.turnovers = turnovers;
-		calculateEffectDisposals();
-	}
-
-    public Player getPlayer()
-	{
-        return this.player;
-    }
-
     public void setPlayer(Player player)
 	{
         this.player = player;
-    }
-
-    public int getKicks()
-	{
-        return this.kicks;
-    }
-
-    public void setKicks(int kicks)
-	{
-        this.kicks = kicks;
-		calculateEffectDisposals();
-    }
-
-    public int getGoals()
-	{
-        return this.goals;
-    }
-
-    public void setGoals(int goals)
-	{
-        this.goals = goals;
-		calculateEffectDisposals();
-    }
-
-    public int getBehinds()
-	{
-        return this.behinds;
-    }
-
-    public void setBehinds(int behinds)
-	{
-        this.behinds = behinds;
-		calculateEffectDisposals();
-    }
-	
-    public boolean isInjured()
-	{
-        return this.isInjured;
-    }
-
-    public void setInjured(boolean injured)
-	{ 
-        this.isInjured = injured;
-    }
-
-    public boolean isReported()
-	{
-        return this.isReported;
     }
 
     public void setReported(boolean isReported)
@@ -170,18 +185,14 @@ public class PlayerStats
         this.isReported = isReported;
     }
 
-    public double getEffectiveDisposals() //maybe rename to percent
+	public void setTeam(Team team)
 	{
-        return this.effectiveDisposals;
-    }
+		this.team = team;
+	}
 
-    public void setEffectiveDisposals(double effectiveDisposals)
+	public void setTurnovers(int turnover)
 	{
-        this.effectiveDisposals = effectiveDisposals;
-    }
-
-	private void calculateEffectDisposals()
-	{
-		setEffectiveDisposals((double)(getGoals() + getPasses() + getBehinds()) * 100 / (double)getKicks());
+		this.turnovers = turnovers;
+		calculateEffectDisposals();
 	}
 }
