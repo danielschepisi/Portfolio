@@ -2,10 +2,10 @@ import java.util.ArrayList;
 
 public class Statistics
 {
+	private ArrayList<PlayerStats> allPlayerStats;
 	private Event[] gameEvents;
 	private Team[] teams;
-	private ArrayList<PlayerStats> allPlayerStats;
-
+	
 	public Statistics()
 	{
 
@@ -17,139 +17,6 @@ public class Statistics
 		this.gameEvents = gameEvents;
 		this.teams = teams;
 		createAllPlayerStats();
-	}
-
-	public Event[] getGameEvents()
-	{
-		return this.gameEvents;
-	}
-
-	public void setGameEvents(Event[] gameEvents)
-	{
-		this.gameEvents = gameEvents;
-	}
-
-	public Team[] getTeams()
-	{
-		return this.teams;
-	}
-
-	public void setTeams(Team[] teams)
-	{
-		this.teams = teams;
-	}
-
-	public ArrayList<PlayerStats> getAllPlayerStats()
-	{
-		return this.allPlayerStats;
-	}
-
-	public void setAllPlayerStats(ArrayList<PlayerStats> allPlayerStats)
-	{
-		this.allPlayerStats = allPlayerStats;
-	}
-
-	public ArrayList<PlayerStats> getHighlights(String field)
-	{
-		ArrayList<PlayerStats> team1PlayerStats = new ArrayList<PlayerStats>();
-		ArrayList<PlayerStats> team2PlayerStats = new ArrayList<PlayerStats>();
-		for (PlayerStats playerStats : getAllPlayerStats())
-		{
-			if (playerStats.getTeam() == getTeams()[0])
-				team1PlayerStats.add(playerStats);
-			else
-				team2PlayerStats.add(playerStats);
-		}
-
-		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
-
-		switch (field)
-		{
-			case "Kicks":
-				returnPlayerStats.addAll(getMostKicksFrom(team1PlayerStats));
-				returnPlayerStats.addAll(getMostKicksFrom(team2PlayerStats));
-				break;
-			case "Goals":
-				returnPlayerStats.addAll(getMostGoalsFrom(team1PlayerStats));
-				returnPlayerStats.addAll(getMostGoalsFrom(team2PlayerStats));
-				break;
-			case "Injuries":
-				returnPlayerStats = getInjuriedPlayerStats();
-				break;
-			case "Reported":
-				returnPlayerStats = getReportedPlayerStats();
-				break;
-		}
-					
-		return returnPlayerStats;
-	}
-
-	private ArrayList<PlayerStats> getInjuriedPlayerStats()
-	{
-		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
-		for (PlayerStats playerStat : getAllPlayerStats())
-		{
-			if (playerStat.isInjured())
-				returnPlayerStats.add(playerStat);
-		}
-
-		return returnPlayerStats;
-	}
-
-	private ArrayList<PlayerStats> getReportedPlayerStats()
-	{
-		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
-		for (PlayerStats playerStat : getAllPlayerStats())
-		{
-			if (playerStat.isReported())
-				returnPlayerStats.add(playerStat);
-		}
-
-		return returnPlayerStats;
-	}
-
-	private ArrayList<PlayerStats> getMostKicksFrom(ArrayList<PlayerStats> playerStats)
-	{
-		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
-		for (PlayerStats playerStat : playerStats)
-		{
-			if (returnPlayerStats.size() == 0)
-				returnPlayerStats.add(playerStat);
-			else
-			{
-				if (playerStat.getKicks() > returnPlayerStats.get(0).getKicks())
-				{
-					returnPlayerStats.clear();
-					returnPlayerStats.add(playerStat);
-				}
-				else if (playerStat.getKicks() == returnPlayerStats.get(0).getKicks())
-					returnPlayerStats.add(playerStat);
-			}
-		}
-
-		return returnPlayerStats;
-	}
-
-	private ArrayList<PlayerStats> getMostGoalsFrom(ArrayList<PlayerStats> playerStats)
-	{
-		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
-		for (PlayerStats playerStat : playerStats)
-		{
-			if (returnPlayerStats.size() == 0)
-				returnPlayerStats.add(playerStat);
-			else
-			{
-				if (playerStat.getGoals() > returnPlayerStats.get(0).getGoals())
-				{
-					returnPlayerStats.clear();
-					returnPlayerStats.add(playerStat);
-				}
-				else if (playerStat.getGoals() == returnPlayerStats.get(0).getGoals())
-						returnPlayerStats.add(playerStat);
-			}
-		}
-
-		return returnPlayerStats;
 	}
 
 	private final void createAllPlayerStats()
@@ -215,5 +82,138 @@ public class Statistics
 		}
 
 		setAllPlayerStats(allPlayerStats);
+	}
+
+	public ArrayList<PlayerStats> getAllPlayerStats()
+	{
+		return this.allPlayerStats;
+	}
+
+	public Event[] getGameEvents()
+	{
+		return this.gameEvents;
+	}
+
+	public ArrayList<PlayerStats> getHighlights(String field)
+	{
+		ArrayList<PlayerStats> team1PlayerStats = new ArrayList<PlayerStats>();
+		ArrayList<PlayerStats> team2PlayerStats = new ArrayList<PlayerStats>();
+		for (PlayerStats playerStats : getAllPlayerStats())
+		{
+			if (playerStats.getTeam() == getTeams()[0])
+				team1PlayerStats.add(playerStats);
+			else
+				team2PlayerStats.add(playerStats);
+		}
+
+		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
+
+		switch (field)
+		{
+			case "Kicks":
+				returnPlayerStats.addAll(getMostKicksFrom(team1PlayerStats));
+				returnPlayerStats.addAll(getMostKicksFrom(team2PlayerStats));
+				break;
+			case "Goals":
+				returnPlayerStats.addAll(getMostGoalsFrom(team1PlayerStats));
+				returnPlayerStats.addAll(getMostGoalsFrom(team2PlayerStats));
+				break;
+			case "Injuries":
+				returnPlayerStats = getInjuriedPlayerStats();
+				break;
+			case "Reported":
+				returnPlayerStats = getReportedPlayerStats();
+				break;
+		}
+					
+		return returnPlayerStats;
+	}
+
+	private ArrayList<PlayerStats> getInjuriedPlayerStats()
+	{
+		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
+		for (PlayerStats playerStat : getAllPlayerStats())
+		{
+			if (playerStat.isInjured())
+				returnPlayerStats.add(playerStat);
+		}
+
+		return returnPlayerStats;
+	}
+
+	private ArrayList<PlayerStats> getMostGoalsFrom(ArrayList<PlayerStats> playerStats)
+	{
+		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
+		for (PlayerStats playerStat : playerStats)
+		{
+			if (returnPlayerStats.size() == 0)
+				returnPlayerStats.add(playerStat);
+			else
+			{
+				if (playerStat.getGoals() > returnPlayerStats.get(0).getGoals())
+				{
+					returnPlayerStats.clear();
+					returnPlayerStats.add(playerStat);
+				}
+				else if (playerStat.getGoals() == returnPlayerStats.get(0).getGoals())
+						returnPlayerStats.add(playerStat);
+			}
+		}
+
+		return returnPlayerStats;
+	}
+
+	private ArrayList<PlayerStats> getMostKicksFrom(ArrayList<PlayerStats> playerStats)
+	{
+		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
+		for (PlayerStats playerStat : playerStats)
+		{
+			if (returnPlayerStats.size() == 0)
+				returnPlayerStats.add(playerStat);
+			else
+			{
+				if (playerStat.getKicks() > returnPlayerStats.get(0).getKicks())
+				{
+					returnPlayerStats.clear();
+					returnPlayerStats.add(playerStat);
+				}
+				else if (playerStat.getKicks() == returnPlayerStats.get(0).getKicks())
+					returnPlayerStats.add(playerStat);
+			}
+		}
+
+		return returnPlayerStats;
+	}
+
+	private ArrayList<PlayerStats> getReportedPlayerStats()
+	{
+		ArrayList<PlayerStats> returnPlayerStats = new ArrayList<PlayerStats>();
+		for (PlayerStats playerStat : getAllPlayerStats())
+		{
+			if (playerStat.isReported())
+				returnPlayerStats.add(playerStat);
+		}
+
+		return returnPlayerStats;
+	}
+
+	public Team[] getTeams()
+	{
+		return this.teams;
+	}
+
+	private void setAllPlayerStats(ArrayList<PlayerStats> allPlayerStats)
+	{
+		this.allPlayerStats = allPlayerStats;
+	}
+
+	private void setGameEvents(Event[] gameEvents)
+	{
+		this.gameEvents = gameEvents;
+	}
+
+	private void setTeams(Team[] teams)
+	{
+		this.teams = teams;
 	}
 }

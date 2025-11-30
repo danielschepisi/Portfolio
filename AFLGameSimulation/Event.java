@@ -23,19 +23,14 @@ public class Event
 		return this.bouncerWinner;
 	}
 
-	public String getKickingPlayerName()
-	{
-		return getPlayerKick().getPlayerName();
-	}
-
-	public String getResult()
-	{
-		return getPlayerKick().getResult();
-	}
-
 	public Player getInjuredPlayer()
 	{
 		return this.injuredPlayer;
+	}
+
+	public String getKickingPlayerName()
+	{
+		return getPlayerKick().getPlayerName();
 	}
 
 	public PlayerKick getPlayerKick()
@@ -51,6 +46,11 @@ public class Event
 	public ArrayList<Player> getReportedPlayers()
 	{
 		return this.reportedPlayers;
+	}
+
+	public String getResult()
+	{
+		return getPlayerKick().getResult();
 	}
 
 	public void setBounceWinner(Player winner)

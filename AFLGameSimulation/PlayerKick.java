@@ -9,46 +9,11 @@ public class PlayerKick
 
     }
 
-    public PlayerKick(Player player, boolean isStarPlayer) //??? this()??
+    public PlayerKick(Player player, boolean isStarPlayer)
     {
         this();
         this.player = player;
         decideOutcome();
-    }
-    
-    public String getResult()
-    {
-        return this.result;
-    }
-
-    public Player getPlayer()
-    {
-        return this.player;
-    }
-
-    public void setPlayer(Player player)
-    {
-        this.player = player;
-    }
-
-    public String getPlayerName()
-    {
-        return getPlayer().getPlayerName();
-    }
-
-    public String getToFieldPosition()
-    {
-        return this.toFieldPosition;
-    }
-    
-    public void setResult(String result)
-    {
-        this.result = result;
-    }
-
-    public void setToFieldPosition(String position)
-    {
-        this.toFieldPosition = position;
     }
 
     private final void decideOutcome()
@@ -177,5 +142,40 @@ public class PlayerKick
                     break;
             }
         }
+    }
+
+    public Player getPlayer()
+    {
+        return this.player;
+    }
+
+    public String getPlayerName()
+    {
+        return getPlayer().getPlayerName();
+    }
+    
+    public String getResult()
+    {
+        return this.result;
+    }
+
+    public String getToFieldPosition()
+    {
+        return this.toFieldPosition;
+    }
+
+    public void setPlayer(Player player)
+    {
+        this.player = player;
+    }
+
+    public void setResult(String result)
+    {
+        this.result = result;
+    }
+
+    public void setToFieldPosition(String position)
+    {
+        this.toFieldPosition = position;
     }
 }
