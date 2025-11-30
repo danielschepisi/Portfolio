@@ -48,7 +48,7 @@ public class Team
         }
     }
 
-    public ArrayList<Player> getActivePlayers() //probably array
+    public ArrayList<Player> getActivePlayers()
     {
         ArrayList<Player> activePlayers = new ArrayList<Player>();
         activePlayers.addAll(getPlayersOfPosition("Forward"));
@@ -57,7 +57,7 @@ public class Team
         return activePlayers;
     }
 
-    public ArrayList<Player> getPlayersOfPosition(String position) //?array
+    public ArrayList<Player> getPlayersOfPosition(String position)
     {
         ArrayList<Player> requestedPlayers = new ArrayList<Player>();
         for(Player player : getPlayers())

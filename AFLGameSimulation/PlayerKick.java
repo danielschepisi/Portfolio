@@ -51,11 +51,10 @@ public class PlayerKick
         this.toFieldPosition = position;
     }
 
-    public final String[] decideOutcome() //check final w constructors
+    private final void decideOutcome()
     {
         String fieldPosition = getPlayer().getFieldPosition(); 
         Double rand = Math.random();
-        String[] outcome = new String[2];
         if (getPlayer().isStarPlayer())
         {
             switch (fieldPosition)
@@ -178,7 +177,5 @@ public class PlayerKick
                     break;
             }
         }
-
-        return outcome;
     }
 }
