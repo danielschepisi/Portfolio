@@ -3,11 +3,11 @@ import java.util.Collections;
 
 public class GameModel
 {
-    private final double REPORTED_CHANCE_PER_GAME = 0.01;
     private final double INJURED_CHANCE_PER_EVENT = 0.02;
+	private final double REPORTED_CHANCE_PER_GAME = 0.01;
 
-    private Team[] teams;
-	private Player playerWithPossession;
+    private Player playerWithPossession;
+	private Team[] teams;
 	private Team teamWithPossession;
 
     public GameModel()
@@ -18,62 +18,12 @@ public class GameModel
     public GameModel(int starPlayers)
     {
     	this();
-		createTeamsFromFile(starPlayers); //******* not sure about this constructor combo
-    }
-
-	public Player getPlayerWithPossession()
-	{
-		return this.playerWithPossession;
-	}
-
-	public String getTeamNameForTeam(Team team)
-	{
-		int index = (team == getTeams()[0]) ? 0 : 1;
-		return getTeams()[index].getTeamName();
-	}
-
-	public Team getTeamWithPossession()
-	{
-		return this.teamWithPossession;
-	}
-
-	public void setPlayerWithPossession(Player player)
-	{
-		this.playerWithPossession = player;
-	}
-
-	public void setTeamWithPossession(Team team)
-	{
-		this.teamWithPossession = team;
-	}
-
-	public void setTeams(Team[] teams)
-    {
-        this.teams = teams;
-    }
-
-    public Team[] getTeams()
-    {
-        return this.teams;
-    }
-
-    public void setTeams(Team teamOne, Team teamTwo)
-    {
-        Team[] teamArray = {teamOne, teamTwo};
-        setTeams(teamArray);
+		createTeamsFromFile(starPlayers);
     }
 
     private double chanceOfBeingReportedPerEvent()
     {
-        return REPORTED_CHANCE_PER_GAME / AFLGame.EVENTS_PER_PERIOD / 4; //FIX THIS EVENTS_PER_PERIOD
-    }
-
-	private void swapTeams() //maybe call turnover
-    {
-        if (getTeams()[0] == getTeamWithPossession())
-            setTeamWithPossession(teams[1]);
-        else
-            setTeamWithPossession(teams[0]);
+        return REPORTED_CHANCE_PER_GAME / AFLGame.EVENTS_PER_PERIOD / AFLGame.NUMBER_OF_PERIODS;
     }
 
 	private final void createTeamsFromFile(int starPlayers)
@@ -89,17 +39,36 @@ public class GameModel
         setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers)); //condense?
     }
 
-	public Team teamWithoutEnoughPlayers()
+	private String currentPlayersName()
 	{
-		for(Team team : getTeams())
-		{
-			if(team.getActivePlayers().size() < 18)
-			{
-				return team;
-			}
-		}
+		return getPlayerWithPossession().getPlayerName();
+	}
 
-		return null;
+	public String displayScoreForTeam(Team team)
+	{
+		int index = (team == getTeams()[0]) ? 0 : 1;
+		return getTeams()[index].displayScore();
+	}
+
+	public Player getPlayerWithPossession()
+	{
+		return this.playerWithPossession;
+	}
+
+    public Team[] getTeams()
+    {
+        return this.teams;
+    }
+
+	public String getTeamNameForTeam(Team team)
+	{
+		int index = (team == getTeams()[0]) ? 0 : 1;
+		return getTeams()[index].getTeamName();
+	}
+
+	public Team getTeamWithPossession()
+	{
+		return this.teamWithPossession;
 	}
 
 	public Team getWinningTeam() //clean up
@@ -124,10 +93,27 @@ public class GameModel
 		return winningTeam;
 	}
 
-	private String currentPlayersName()
+	private void injurePlayers(Event currentEvent)
 	{
-		return getPlayerWithPossession().getPlayerName();
+		if(Math.random() < INJURED_CHANCE_PER_EVENT)
+		{
+			Team team = pickRandomTeam();
+			ArrayList<Player> activePlayers = team.getActivePlayers();
+			if(activePlayers.size() > 0)
+			{
+				Collections.shuffle(activePlayers);
+				Player injuredPlayer = activePlayers.get(0);
+				injuredPlayer.injure();
+				team.replacePlayer(injuredPlayer);
+				currentEvent.setInjuredPlayer(injuredPlayer);
+			}
+		}
 	}
+
+   private Team pickRandomTeam()
+    {
+    	return (Math.random() < 0.5) ? teams[0] : teams[1];
+    }
 
 	public Event playEvent()
 	{
@@ -147,12 +133,10 @@ public class GameModel
 		switch (playerKick.getResult()) //watch for validation on assigning from teams
 		{
 			case "Goal":
-				//assign goal
 				getTeamWithPossession().scoreGoal();
 				setPlayerWithPossession(null);
 				break;
 			case "Behind":
-				// assign behind
 				getTeamWithPossession().scoreBehind();
 				swapTeams();
 				setPlayerWithPossession(
@@ -187,30 +171,6 @@ public class GameModel
 		return currentEvent;
 	}
 
-	private void injurePlayers(Event currentEvent)
-	{
-		if(Math.random() < INJURED_CHANCE_PER_EVENT)
-		{
-			Team team = pickRandomTeam();
-			ArrayList<Player> activePlayers = team.getActivePlayers();
-			if(activePlayers.size() > 0)
-			{
-				Collections.shuffle(activePlayers);
-				Player injuredPlayer = activePlayers.get(0);
-				injuredPlayer.injure();
-				team.replacePlayer(injuredPlayer);
-				currentEvent.setInjuredPlayer(injuredPlayer);
-			}
-		}
-	}
-
-	public String displayScoreForTeam(Team team)
-	{
-		int index = (team == getTeams()[0]) ? 0 : 1;
-		return getTeams()[index].displayScore();
-	}
-
-
 	private void reportPlayers(Event currentEvent)
 	{
 		for(Team team : getTeams())
@@ -219,17 +179,12 @@ public class GameModel
 			{
 				if(Math.random() < chanceOfBeingReportedPerEvent())
 				{
-					player.setIsReported(true); //maybe chagne to report
+					player.setIsReported(true);
 					currentEvent.addReportedPlayer(player);
 				}
 			}
 		}
 	}
-
-    private Team pickRandomTeam()
-    {
-    	return (Math.random() < 0.5) ? teams[0] : teams[1];
-    }
 
 	public void saveStatsToFile()
 	{
@@ -245,5 +200,47 @@ public class GameModel
             String fileName = team.getTeamName().replaceAll("\\s", "") + "Updated.txt";
             fileio.writeFile(teamData, fileName); //catch exceptions
         }
+	}
+
+	public void setPlayerWithPossession(Player player)
+	{
+		this.playerWithPossession = player;
+	}
+
+	public void setTeams(Team[] teams)
+    {
+        this.teams = teams;
+    }
+
+    public void setTeams(Team teamOne, Team teamTwo)
+    {
+        Team[] teamArray = {teamOne, teamTwo};
+        setTeams(teamArray);
+    }
+
+	public void setTeamWithPossession(Team team)
+	{
+		this.teamWithPossession = team;
+	}
+
+	private void swapTeams()
+    {
+        if (getTeams()[0] == getTeamWithPossession())
+            setTeamWithPossession(teams[1]);
+        else
+            setTeamWithPossession(teams[0]);
+    }
+
+	public Team teamWithoutEnoughPlayers()
+	{
+		for(Team team : getTeams())
+		{
+			if(team.getActivePlayers().size() < 18)
+			{
+				return team;
+			}
+		}
+
+		return null;
 	}
 }

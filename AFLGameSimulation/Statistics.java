@@ -122,6 +122,8 @@ public class Statistics
 					returnPlayerStats.clear();
 					returnPlayerStats.add(playerStat);
 				}
+				else if (playerStat.getKicks() == returnPlayerStats.get(0).getKicks())
+					returnPlayerStats.add(playerStat);
 			}
 		}
 
@@ -142,43 +144,13 @@ public class Statistics
 					returnPlayerStats.clear();
 					returnPlayerStats.add(playerStat);
 				}
+				else if (playerStat.getGoals() == returnPlayerStats.get(0).getGoals())
+						returnPlayerStats.add(playerStat);
 			}
 		}
 
 		return returnPlayerStats;
 	}
-
-	// public ArrayList<Player> getReportedPlayers()
-	// {
-	// 	ArrayList<Player> reportedPlayers = new ArrayList<Player>();
-
-	// 	for (Team team : getTeams())
-	// 	{
-	// 		for (Player player : team.getPlayers())
-	// 		{
-	// 			if (player.isReported())
-	// 				reportedPlayers.add(player);
-	// 		}
-	// 	}
-
-	// 	return reportedPlayers;
-	// }
-
-	// public ArrayList<Player> getInjuredPlayers()
-	// {
-	// 	ArrayList<Player> injuredPlayers = new ArrayList<Player>();
-
-	// 	for (Team team : getTeams())
-	// 	{
-	// 		for (Player player : team.getPlayers())
-	// 		{
-	// 			if (player.isInjured())
-	// 				injuredPlayers.add(player);
-	// 		}
-	// 	}
-
-	// 	return injuredPlayers;
-	// }
 
 	private final void createAllPlayerStats()
 	{

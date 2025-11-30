@@ -4,8 +4,8 @@ public class AFLGame
 {
     public static final int EVENTS_PER_PERIOD = 80;
     public static final int MAX_NUMBER_OF_STAR_PLAYERS = 8;
-    private static final int NUMBER_OF_PERIODS = 4;
-    
+    public static final int NUMBER_OF_PERIODS = 4;
+
     private final GameModel gameModel;
     private final Event[] gameEvents;
 
@@ -182,7 +182,7 @@ public class AFLGame
         for (PlayerStats playerStats : mostGoals)
         {
             print("\t" + playerStats.getName() 
-                + " " + playerStats.getKicks() + " goals."
+                + " " + playerStats.getGoals() + " goals."
             );
         }
     }
