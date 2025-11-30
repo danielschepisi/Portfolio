@@ -1,3 +1,11 @@
+/**
+ * The Team class contains the associated players and score
+ * of the team
+ * 
+ * @author Daniel Schepisi
+ * @version ver 1.0.0
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -48,6 +56,10 @@ public class Team
         }
     }
 
+    /**
+    * Chooses a random player from the provided position
+    * @param    position    The position of the player required
+    */
     public Player chooseRandomPlayerFromPosition(String position)
     {
         ArrayList<Player> temp = new ArrayList<Player>(getPlayersOfPosition(position));
@@ -55,16 +67,25 @@ public class Team
         return temp.get(0); //need validation checks??
     }
 
+    /**
+    * Chooses a random player from the provided position excluding
+    * the given player
+    * @param    position    The position of the player required
+    * @param    player    The player to exculde from selection
+    */
     public Player chooseRandomPlayerFromPositionExcluding(String position, Player player)
     {
         ArrayList<Player> temp = new ArrayList<Player>(getPlayersOfPosition(position));
         if (temp.contains(player))
             temp.remove(player);
         Collections.shuffle(temp);
-        return temp.get(0); //need validation checks??
+        return temp.get(0);
     }
 
-    public String display() //do better version
+    /**
+    * Returns a string of the state of the team
+    */
+    public String display()
     {
         String state = getTeamName();
 
@@ -76,11 +97,17 @@ public class Team
         return state;
     }
 
+    /**
+    * Returns a string with the score of the team
+    */
     public String displayScore()
     {
         return getScore().display();
     }
 
+    /**
+    * Returns players who are currently in play on the field
+    */
     public ArrayList<Player> getActivePlayers()
     {
         ArrayList<Player> activePlayers = new ArrayList<Player>();
@@ -90,6 +117,9 @@ public class Team
         return activePlayers;
     }
 
+    /**
+    * Returns players who are injured
+    */
     public ArrayList<Player> getInjuredPlayers()
     {
         ArrayList<Player> injuredPlayers = new ArrayList<Player>();
@@ -103,11 +133,18 @@ public class Team
         return injuredPlayers;
     }
 
+    /**
+    * Returns all the players in the team
+    */
     public ArrayList<Player> getPlayers()
     {
         return this.players;
     }
 
+    /**
+    * Returns uninjured players of the requested position
+    * @param    position    The position of the players required
+    */
     public ArrayList<Player> getPlayersOfPosition(String position)
     {
         ArrayList<Player> requestedPlayers = new ArrayList<Player>();
@@ -122,22 +159,36 @@ public class Team
         return requestedPlayers;
     }
 
+    /**
+    * Returns the team's points
+    */
     public int getPoints()
     {
         return getScore().getPoints();
     }
 
+    /**
+    * Returns the team's score
+    */
     public Score getScore()
     {
         return this.score;
     }
 
+    /**
+    * Returns the team's name
+    */
     public String getTeamName()
     {
         return this.teamName;
     }
 
-    public void replacePlayer(Player injuredPlayer) //surely can improve this
+    /**
+    * Replaces the injured player with a reserve player 
+    * if possible
+    * @param    injuredPlayer    The player to be replaced
+    */
+    public void replacePlayer(Player injuredPlayer)
     {
         String position = injuredPlayer.getFieldPosition();
         if(getPlayersOfPosition("Reserve").size() > 0)
@@ -146,26 +197,44 @@ public class Team
         }
     }
 
+    /**
+    * Adds a behind to the score
+    */
     public void scoreBehind()
     {
         getScore().addBehind();
     }
 
+    /**
+    * Adds a goal to the score
+    */
     public void scoreGoal()
     {
         getScore().addGoal();
     }
 
+    /**
+    * Sets the players on the team
+    * @param    players    The players to be on the team
+    */
     private void setPlayers(ArrayList<Player> players)
     {
         this.players = players;
     }
 
+    /**
+    * Sets the team score
+    * @param    score    The team's score
+    */
     private void setScore(Score score)
     {
         this.score = score;
     }
 
+    /**
+    * Sets the name of the team
+    * @param    teamName    The name of the team
+    */
     private void setTeamName(String teamName)
     {
         this.teamName = teamName;

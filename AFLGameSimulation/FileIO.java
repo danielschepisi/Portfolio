@@ -1,3 +1,10 @@
+/**
+ * This class is responsile for the readind and writing
+ * of data to and from files.
+ * 
+ * @author Daniel Schepisi
+ * @version ver 1.0.0
+ */
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Scanner;
@@ -9,6 +16,11 @@ public class FileIO
 
     }
 
+    /**
+    * Reads the file with the provided fileName and returns 
+    * he contents as a string
+    * @param    fileName    The name of the file to be read
+    */
     public String readFile(String fileName) //fileName > 0
     {
         // if(fileName.trim().length() > 0) use this, else print please enter file name
@@ -47,6 +59,11 @@ public class FileIO
         return fileBody;
     }
 
+    /**
+    * Writes the provided text to a file with the provided file name
+    * @param    text    The data to write
+    * @param    fileName    The name of the file
+    */
     public void writeFile(String text, String fileName)
     {
         try

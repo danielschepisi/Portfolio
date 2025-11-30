@@ -1,3 +1,11 @@
+/**
+ * This class is the master class of the game, it is responsible for controlling the game
+ * and displaying and receiving user interaction. It defers to GameModel for the logic
+ * of individual events
+ * 
+ * @author Daniel Schepisi
+ * @version ver 1.0.0
+ */
 import java.util.ArrayList;
 
 public class AFLGame
@@ -21,16 +29,26 @@ public class AFLGame
         this.gameEvents = new Event[NUMBER_OF_PERIODS * EVENTS_PER_PERIOD];
     }
 
+    /**
+    * Gets the array which holds all of the game's events
+    */
     public Event[] getGameEvents()
     {
         return this.gameEvents;
     }
 
+    /**
+    * Gets the gameModel associated with the game
+    */
     public GameModel getGameModel()
     {
         return this.gameModel;
     }
 
+    /**
+    * This is the main method which begins the program execution
+    * @param    args    An array of string passed in as command line parameters
+    */
     public static void main(String[] args)
     {
         Input consoleReader = new Input();
@@ -67,6 +85,9 @@ public class AFLGame
         game.getGameModel().saveStatsToFile();
     }
 
+    /**
+    * Starts the game and prints the result of each event to the screen
+    */
     private void playGame()
     {
         int period = 1;
@@ -144,11 +165,18 @@ public class AFLGame
 		} while (period <= NUMBER_OF_PERIODS && continueGame);
     }
 
+    /**
+    * A helper method to print to the screen
+    * @param    text    A string to print out
+    */
     private void print(String text)
     {
         System.out.println(text);
     }
 
+    /**
+    * Prints the results of the game to the screen
+    */
     private void printGameOverResults()
     {
         printLine();
@@ -162,6 +190,10 @@ public class AFLGame
         printLine();
     }
 
+    /**
+    * Prints the injured players from the game to the screen
+    * @param    stats    The Statistics that contain the data
+    */
     private void printInjuredPlayers(Statistics stats)
     {
         ArrayList<PlayerStats> injuries = stats.getHighlights("Injuries");
@@ -170,11 +202,18 @@ public class AFLGame
             print("\t" + playerStats.getName());
     }
 
+    /**
+    * Helper method that prints a line to the screen
+    */
     private void printLine()
     {
         System.out.println("\t------------------------------");
     }
 
+    /**
+    * Prints the players for each team who kicked the most goals
+    * @param    stats    The Statistics that contain the data
+    */
     private void printMostGoals(Statistics stats)
     {
         ArrayList<PlayerStats> mostGoals = stats.getHighlights("Goals");
@@ -187,6 +226,10 @@ public class AFLGame
         }
     }
 
+    /**
+    * Prints the players from each team who had the most kicks
+    * @param    stats    The Statistics that contains the data
+    */
     private void printMostKicks(Statistics stats)
     {
         ArrayList<PlayerStats> mostKicks = stats.getHighlights("Kicks");
@@ -199,6 +242,10 @@ public class AFLGame
         }
     }
 
+    /**
+    * Prints a block stating the quarter and the score
+    * @param    period    An integer stating the period of the game
+    */
     private void printPeriodStart(int period)
     {
         printLine();
@@ -207,6 +254,10 @@ public class AFLGame
         printScore();
     }
 
+    /**
+    * Prints the stats for each player
+    * @param    stats    The Statistics that contains the data
+    */
     private void printPlayerStats(Statistics stats)
     {
         print("Individual Player Stats:");
@@ -230,6 +281,10 @@ public class AFLGame
         }
     }
 
+    /**
+    * Prints out the players who were reported during the game
+    * @param    stats    The Statistics that contains the data
+    */
     private void printReportedPlayers(Statistics stats)
     {
         ArrayList<PlayerStats> reported = stats.getHighlights("Reported");
@@ -238,6 +293,9 @@ public class AFLGame
             print("\t" + playerStats.getName());
     }
 
+    /**
+    * Prints all the required statistics
+    */
     private void printStatistics()
     {
         Statistics stats = new Statistics(getGameEvents(), getGameModel().getTeams());
@@ -249,6 +307,9 @@ public class AFLGame
         printReportedPlayers(stats);
     }
 
+    /**
+    * Prints the game score to teh screen
+    */
     private void printScore()
     {
         for(Team team : getGameModel().getTeams())

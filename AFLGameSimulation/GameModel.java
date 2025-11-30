@@ -1,3 +1,11 @@
+/**
+ * This class contains the logic of the game. It is responsible for reading the team
+ * data in and creating the teams/players. Running the logic of individual events and
+ * then writing the team data to file.
+ * 
+ * @author Daniel Schepisi
+ * @version ver 1.0.0
+ */
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -21,11 +29,18 @@ public class GameModel
 		createTeamsFromFile(starPlayers);
     }
 
+	/**
+    * Calculates the odds of a player being reported during an event
+    */
     private double chanceOfBeingReportedPerEvent()
     {
         return REPORTED_CHANCE_PER_GAME / AFLGame.EVENTS_PER_PERIOD / AFLGame.NUMBER_OF_PERIODS;
     }
 
+	/**
+    * Creates the teams from reaading in data from file
+    * @param    starPlayers    The number of star players each team has
+    */
 	private final void createTeamsFromFile(int starPlayers)
     {
         FileIO fileio = new FileIO();
@@ -39,38 +54,61 @@ public class GameModel
         setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers)); //condense?
     }
 
+	/**
+    * Returns the name of the player who current has possession
+    */
 	private String currentPlayersName()
 	{
 		return getPlayerWithPossession().getPlayerName();
 	}
 
+	/**
+    * Returns the score for the team as a string
+    * @param    team    The team whose score is wanted
+    */
 	public String displayScoreForTeam(Team team)
 	{
 		int index = (team == getTeams()[0]) ? 0 : 1;
 		return getTeams()[index].displayScore();
 	}
 
+	/**
+    * Returns the player with possession of the ball
+    */
 	public Player getPlayerWithPossession()
 	{
 		return this.playerWithPossession;
 	}
 
+	/**
+    * Returns the array of teams in the game
+    */
     public Team[] getTeams()
     {
         return this.teams;
     }
 
+	/**
+    * Returns the name of the team
+    * @param    team    The team whose name is wanted
+    */
 	public String getTeamNameForTeam(Team team)
 	{
 		int index = (team == getTeams()[0]) ? 0 : 1;
 		return getTeams()[index].getTeamName();
 	}
 
+	/**
+    * Returns the team with possession of the ball
+    */
 	public Team getTeamWithPossession()
 	{
 		return this.teamWithPossession;
 	}
 
+	/**
+    * Determines and returns the winning team
+    */
 	public Team getWinningTeam() //clean up
 	{
 		Team winningTeam = null;
@@ -93,6 +131,11 @@ public class GameModel
 		return winningTeam;
 	}
 
+	/**
+    * Determines if a player should be injured during an event,
+	* injures the player and records it on the event
+    * @param    currentEvent    The event on which to record the injury
+    */
 	private void injurePlayers(Event currentEvent)
 	{
 		if(Math.random() < INJURED_CHANCE_PER_EVENT)
@@ -110,11 +153,17 @@ public class GameModel
 		}
 	}
 
-   private Team pickRandomTeam()
+	/**
+    * Selects and returns a team at random
+    */
+    private Team pickRandomTeam()
     {
     	return (Math.random() < 0.5) ? teams[0] : teams[1];
     }
 
+	/**
+    * Creates, plays out and returns an event
+    */
 	public Event playEvent()
 	{
 		Event currentEvent = new Event();
@@ -171,6 +220,12 @@ public class GameModel
 		return currentEvent;
 	}
 
+	/**
+    * Determines if a player should be reported during an event,
+	* reports the palyer and records it on the event
+    * @param    currentEvent    The event on which to record 
+	* the reported player
+    */
 	private void reportPlayers(Event currentEvent)
 	{
 		for(Team team : getTeams())
@@ -186,6 +241,9 @@ public class GameModel
 		}
 	}
 
+	/**
+    * Writes the player data to file
+    */
 	public void saveStatsToFile()
 	{
         FileIO fileio = new FileIO();
@@ -202,27 +260,47 @@ public class GameModel
         }
 	}
 
+	/**
+    * Sets the player with possession
+    * @param    player    The player who now has possession
+    */
 	public void setPlayerWithPossession(Player player)
 	{
 		this.playerWithPossession = player;
 	}
 
+	/**
+    * Sets the teams of the game
+    * @param    teams    The teams involved in the game
+    */
 	public void setTeams(Team[] teams)
     {
         this.teams = teams;
     }
 
+	/**
+    * A helper method to set the teams of the game
+    * @param    teamOne    The first team playing
+    * @param    teamTwo    The second team playing
+    */
     public void setTeams(Team teamOne, Team teamTwo)
     {
         Team[] teamArray = {teamOne, teamTwo};
         setTeams(teamArray);
     }
 
+	/**
+    * Sets the team with possession of the ball
+    * @param    team    The team with possession
+    */
 	public void setTeamWithPossession(Team team)
 	{
 		this.teamWithPossession = team;
 	}
 
+	/**
+    * Swaps the team with possession of the ball
+    */
 	private void swapTeams()
     {
         if (getTeams()[0] == getTeamWithPossession())
@@ -231,6 +309,9 @@ public class GameModel
             setTeamWithPossession(teams[0]);
     }
 
+	/**
+    * Returns the first team without enough players if any
+    */
 	public Team teamWithoutEnoughPlayers()
 	{
 		for(Team team : getTeams())
