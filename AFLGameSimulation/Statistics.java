@@ -49,10 +49,8 @@ public class Statistics
 		this.allPlayerStats = allPlayerStats;
 	}
 
-	// public ArrayList<PlayerStats> getSomething()
 	public ArrayList<PlayerStats> getMost(String field)
 	{
-		// ArrayList<PlayerStats> allPlayerStats = createAllPlayerStats();
 		ArrayList<PlayerStats> team1PlayerStats = new ArrayList<PlayerStats>();
 		ArrayList<PlayerStats> team2PlayerStats = new ArrayList<PlayerStats>();
 		for (PlayerStats playerStats : getAllPlayerStats())
@@ -152,9 +150,7 @@ public class Statistics
 		return injuredPlayers;
 	}
 
-
-	//maybe this is a field made from constructor?
-	private void createAllPlayerStats()
+	private final void createAllPlayerStats()
 	{
 		ArrayList<PlayerStats> allPlayerStats = new ArrayList<PlayerStats>();
 

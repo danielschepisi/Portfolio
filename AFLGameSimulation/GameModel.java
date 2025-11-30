@@ -3,27 +3,22 @@ import java.util.Collections;
 
 public class GameModel
 {
-    // private final double REPORTED_CHANCE_PER_GAME = 0.01;
-    private final double REPORTED_CHANCE_PER_GAME = 0.51;
+    private final double REPORTED_CHANCE_PER_GAME = 0.01;
     private final double INJURED_CHANCE_PER_EVENT = 0.02;
-    // private final double INJURED_CHANCE_PER_EVENT = 0.02;
-
 
     private Team[] teams;
-	// private StringBuffer gamePlayNarrative;
-
 	private Player playerWithPossession;
 	private Team teamWithPossession;
 
     public GameModel()
     {
-		// this.gamePlayNarrative = new StringBuffer();
+
     }
 
     public GameModel(int starPlayers)
     {
     	this();
-		createTeams(starPlayers); //******* not sure about this constructor combo
+		createTeamsFromFile(starPlayers); //******* not sure about this constructor combo
     }
 
 	public Player getPlayerWithPossession()
@@ -75,7 +70,7 @@ public class GameModel
             setTeamWithPossession(teams[0]);
     }
 
-	private final void createTeams(int starPlayers)
+	private final void createTeamsFromFile(int starPlayers)
     {
         FileIO fileio = new FileIO();
 
@@ -88,13 +83,12 @@ public class GameModel
         setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers)); //condense?
     }
 
-	public Team teamWithoutEnoughPlayers() //name change, check injured players
+	public Team teamWithoutEnoughPlayers()
 	{
 		for(Team team : getTeams())
 		{
 			if(team.getActivePlayers().size() < 18)
 			{
-				// return false;
 				return team;
 			}
 		}
@@ -106,15 +100,20 @@ public class GameModel
 	{
 		Team winningTeam = null;
 		Team forfeitTeam = teamWithoutEnoughPlayers();
-		if (forfeitTeam == getTeams()[0])
-			winningTeam = getTeams()[1];
-		if (forfeitTeam == getTeams()[1])
-			winningTeam = getTeams()[0];
-
-		if (getTeams()[0].getScore().getPoints() > getTeams()[1].getScore().getPoints()) //coupling
-			winningTeam = getTeams()[0];
-		if (getTeams()[1].getScore().getPoints() > getTeams()[1].getScore().getPoints())
-			winningTeam = getTeams()[1];
+		if (forfeitTeam != null)
+		{
+			if (forfeitTeam == getTeams()[0])
+				winningTeam = getTeams()[1];
+			if (forfeitTeam == getTeams()[1])
+				winningTeam = getTeams()[0];
+		}
+		else
+		{
+			if (getTeams()[0].getPoints() > getTeams()[1].getPoints())
+				winningTeam = getTeams()[0];
+			if (getTeams()[1].getPoints() > getTeams()[0].getPoints())
+				winningTeam = getTeams()[1];
+		}
 
 		return winningTeam;
 	}
@@ -218,4 +217,20 @@ public class GameModel
     {
     	return (Math.random() < 0.5) ? teams[0] : teams[1];
     }
+
+	public void saveStatsToFile()
+	{
+        FileIO fileio = new FileIO();
+        for(Team team : teams)
+        {
+			String teamData = team.getTeamName();
+			for(Player player : team.getPlayers())
+			{
+				teamData += "\n" + player.getPlayerName() + "," + player.getFieldPosition() + "," + player.getSeasonGoals();
+			} 
+
+            String fileName = team.getTeamName().replaceAll("\\s", "") + "Updated.txt";
+            fileio.writeFile(teamData, fileName); //catch exceptions
+        }
+	}
 }

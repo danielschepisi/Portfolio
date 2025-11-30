@@ -57,8 +57,6 @@ public class Team
         return activePlayers;
     }
 
-    //getReportedPlayers()
-
     public ArrayList<Player> getPlayersOfPosition(String position) //?array
     {
         ArrayList<Player> requestedPlayers = new ArrayList<Player>();
@@ -85,23 +83,6 @@ public class Team
         }
         return injuredPlayers;
     }
-
-    // public String injurePlayer() //check validation
-    // {
-    //     String injuredPlayerName = "";
-    //     ArrayList<Player> activePlayers = getActivePlayers();
-    //     if(activePlayers.size() > 0)
-    //     {
-    //         Collections.shuffle(activePlayers);
-    //         Player injuredPlayer = activePlayers.get(0);
-    //         injuredPlayer.injure();
-
-    //         replacePlayer(injuredPlayer);
-    //         injuredPlayerName = injuredPlayer.getPlayerName();
-    //     }
-
-    //     return injuredPlayerName;
-    // }
 
     public void replacePlayer(Player injuredPlayer) //surely can improve this
     {
@@ -133,17 +114,6 @@ public class Team
         }
 
         return reportedPlayers;
-    }
-
-    public String statsToWrite()
-    {
-        String data = getTeamName();
-        for(Player player : getPlayers())
-        {
-            data += "\n" + player.getPlayerName() + "," + player.getFieldPosition() + "," + player.getSeasonGoals();
-        }
-
-        return data;
     }
 
     public String getTeamName()
@@ -192,6 +162,11 @@ public class Team
     public Score getScore()
     {
         return this.score;
+    }
+
+    public int getPoints()
+    {
+        return getScore().getPoints();
     }
 
     public void scoreBehind()

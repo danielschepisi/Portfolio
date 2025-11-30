@@ -4,24 +4,20 @@ public class AFLGame
 {
     public static final int MAX_NUMBER_OF_STAR_PLAYERS = 8;
     private final int NUMBER_OF_PERIODS = 4; //??? static
-    public static final int EVENTS_PER_PERIOD = 1;
-	// private final int EVENTS_PER_PERIOD = 80;
+    public static final int EVENTS_PER_PERIOD = 80;
 
     private GameModel gameModel;
-    // private Score gameScore;
     private Event[] gameEvents;
 
     public AFLGame()
     {
         this.gameModel = new GameModel();
-        // this.gameScore = new Score();
         this.gameEvents = new Event[NUMBER_OF_PERIODS * EVENTS_PER_PERIOD];
     }
 
     public AFLGame(GameModel gameModel)
     {
         this.gameModel = gameModel;
-        // this.gameScore = new Score();
         this.gameEvents = new Event[NUMBER_OF_PERIODS * EVENTS_PER_PERIOD];
     }
 
@@ -45,32 +41,35 @@ public class AFLGame
         {
             try
             {
-                numberOfStarPlayers = consoleReader.askForIntegerInput("Enter number of star players for each team:"); //too long
+                numberOfStarPlayers = consoleReader.askForIntegerInput(
+                    "Enter number of star players for each team:");
                 if (validator.intWithinRange(
                         numberOfStarPlayers, 0, AFLGame.MAX_NUMBER_OF_STAR_PLAYERS
-                    )) //??code elsewhere
+                    ))
                     proceed = true;
                 else
                     System.out.println(
-                        "Please enter an integer from 0 - " + AFLGame.MAX_NUMBER_OF_STAR_PLAYERS);
+                        "Please enter an integer from 0 - " + AFLGame.MAX_NUMBER_OF_STAR_PLAYERS
+                    );
             }
             catch (Exception e)
             {
-                System.out.println("Please enter an integer from 0 - " + AFLGame.MAX_NUMBER_OF_STAR_PLAYERS);
+                System.out.println(
+                    "Please enter an integer from 0 - " + AFLGame.MAX_NUMBER_OF_STAR_PLAYERS
+                );
             }
         } while (proceed == false);
 
         AFLGame game = new AFLGame(new GameModel(numberOfStarPlayers));
 
         game.playGame();
-
         game.printStatistics();
-
+        game.getGameModel().saveStatsToFile();
     }
 
     private void printLine()
     {
-        System.out.println("-----------------------");
+        System.out.println("\t------------------------------");
     }
 
     private void print(String text)
@@ -78,56 +77,83 @@ public class AFLGame
         System.out.println(text);
     }
 
-    private void printStatistics()
+    private void printGameOverResults()
     {
         printLine();
-        printLine();
-        print("Game Over");
-
+        print("\t\tGame Over");
         Team winner = getGameModel().getWinningTeam();
         if (winner == null)
-            print("The game was a draw!");
+            print("\tThe game was a draw!");
         else
-            print("The winner is " + winner.getTeamName());
+            print("\tThe winner is " + winner.getTeamName());
         printScore();
+        printLine();
+    }
 
-        
-
-
-        Statistics stats = new Statistics(getGameEvents(), getGameModel().getTeams());
+    private void printMostKicks(Statistics stats)
+    {
         ArrayList<PlayerStats> mostKicks = stats.getMost("Kicks");
-        System.out.println("Players with the most kicks:");
-        for (PlayerStats playerStats : mostKicks) //coupling
-            System.out.println("\t" + playerStats.getPlayer().getPlayerName() + " " + playerStats.getKicks() + " kicks.");
+        print("Players with the most kicks:");
+        for (PlayerStats playerStats : mostKicks)
+        { //coupling
+            print("\t" + playerStats.getName() 
+                + " " + playerStats.getKicks() + " kicks."
+            );
+        }
+    }
 
+    private void printMostGoals(Statistics stats)
+    {
         ArrayList<PlayerStats> mostGoals = stats.getMost("Goals");
-        System.out.println("Players with the most goals:");
+        print("Players with the most goals:");
         for (PlayerStats playerStats : mostGoals) //coupling
-            System.out.println("\t" + playerStats.getPlayer().getPlayerName() + " " + playerStats.getKicks() + " goals.");
+        {
+            print("\t" + playerStats.getName() 
+                + " " + playerStats.getKicks() + " goals."
+            );
+        }
+    }
 
-        System.out.println("Individual Player Stats:");
+    private void printPlayerStats(Statistics stats)
+    {
+        print("Individual Player Stats:");
         ArrayList<PlayerStats> allPlayerStats = stats.getAllPlayerStats();
         for(PlayerStats playerStats : allPlayerStats)
         {
-            StringBuffer playerDisplay = new StringBuffer();
-            playerDisplay.append(playerStats.getPlayer().getPlayerName());
-            playerDisplay.append(" was " + (playerStats.isInjured() ? "" : "not ") + "injured,");
-            playerDisplay.append(" was " + (playerStats.isReported() ? "" : "not ") + "reported, ");
-            playerDisplay.append(playerStats.getKicks() + (playerStats.getKicks() == 1 ? " kick, " : " kicks, "));
-            playerDisplay.append(playerStats.getGoals() + (playerStats.getGoals() == 1 ? " goal " : " goals "));
-            playerDisplay.append("and " + String.format("%.2f", playerStats.getEffectiveDisposals()) + "% effective disposals.");
-            System.out.println("\t" + playerDisplay.toString());
-        }
+            String playerName = playerStats.getName();
+            String injured = "was" + (playerStats.isInjured() ? " " : "n't ") + "injured,";
+            String reported = "was" + (playerStats.isReported() ? " " : "n't ") + "reported,";
+            String kicks = playerStats.getKicks() 
+                + (playerStats.getKicks() == 1 ? " kick," : " kicks,");
+            String goals = playerStats.getGoals() 
+                + (playerStats.getGoals() == 1 ? " goal" : " goals");
+            String disposals = "and " 
+                + String.format("%.2f", playerStats.getEffectiveDisposals()) 
+                + "% effective disposals.";
 
-        System.out.println("Injured Players:");
+            String formattedData = String.format("%-10s %-15s %-16s %-9s %-8s %-31s", 
+                playerName, injured, reported, kicks, goals, disposals);
+            print("\t" + formattedData);
+        }
+    }
+
+    private void printStatistics()
+    {
+        Statistics stats = new Statistics(getGameEvents(), getGameModel().getTeams());
+        printGameOverResults();
+        printMostKicks(stats);
+        printMostGoals(stats);
+        printPlayerStats(stats);
+
+        print("Injured Players:");
         ArrayList<Player> injuredPlayers = stats.getInjuredPlayers();
         for (Player player : injuredPlayers) //coupling
-            System.out.println("\t" + player.getPlayerName());
+            print("\t" + player.getPlayerName());
 
-        System.out.println("Reported Players:");
+        print("Reported Players:");
         ArrayList<Player> reportedPlayers = stats.getReportedPlayers();
         for (Player player : reportedPlayers) //coupling
-            System.out.println("\t" + player.getPlayerName());
+            print("\t" + player.getPlayerName());
 
     }
 
@@ -139,7 +165,7 @@ public class AFLGame
     private void printPeriodStart(int period)
     {
         printLine();
-        System.out.println("Quarter: " + period + "\n");
+        System.out.println("\t\tQuarter: " + period + "\n");
         printLine();
         printScore();
     }
@@ -238,132 +264,9 @@ public class AFLGame
     private void printScore()
     {
         // reduce coupling at least
-        System.out.println(getGameModel().getTeams()[0].getTeamName() + ": " + getGameModel().getTeams()[0].getScore().display());
-        System.out.println(getGameModel().getTeams()[1].getTeamName() + ": " + getGameModel().getTeams()[1].displayScore());
+        print("\t" + getGameModel().getTeams()[0].getTeamName() + ": " + getGameModel().getTeams()[0].getScore().display());
+        print("\t" + getGameModel().getTeams()[1].getTeamName() + ": " + getGameModel().getTeams()[1].displayScore());
     }
 
-    // public void endGame(boolean forfeit)
-    // {
-    //     //probably here ln 221 > 331 to a statistics model
-    //     if(forfeit)
-    //     {
-    //         String winner = (teams[0].getActivePlayers().size() < 18) ? teams[1].getTeamName() : teams[0].getTeamName();
-    //         System.out.println("\nTHE WINNER IS: " + winner + " (due to forfeit)!");
-    //     }
-    //     else
-    //     {
-    //         //must change
-    //         String winner = teams[0].getScore().getPoints() > teams[1].getScore().getPoints() ? teams[0].getTeamName() : teams[1].getTeamName();
-    //         if(teams[0].getScore().getPoints() == teams[1].getScore().getPoints())
-    //             System.out.println("\nIT'S A DRAW!");
-    //         else
-    //             System.out.println("\nTHE WINNER IS: " + winner + "!");
-    //     }
 
-
-    //     System.out.println("\nFinal Score (Behinds, Goals, Points):");
-    //     this.printScore();
-        
-    //     //most kicks
-    //     for(Team team : teams)
-    //     {
-    //         System.out.println("\nMost Kicks for " + team.getTeamName());
-    //         ArrayList<Player> mostKicks = new ArrayList<Player>();
-    //         for(Player player : team.getPlayers()) //I'd like to sort the players
-    //         {
-    //             int playerKicks = player.getKicks();
-    //             if(mostKicks.size() > 0)
-    //             {
-    //                 int max = mostKicks.get(0).getKicks();
-    //                 if(playerKicks > max)
-    //                 {
-    //                     mostKicks.clear();
-    //                     mostKicks.add(player);
-    //                 }
-    //                 else if (playerKicks == max)
-    //                     mostKicks.add(player);
-    //             }
-    //             else
-    //             {
-    //                 mostKicks.add(player);
-    //             }
-    //         }
-
-    //         for (Player player : mostKicks)
-    //         {
-    //             System.out.println(player.getPlayerName());
-    //         }
-    //     }
-
-    //     //most goals
-    //     for(Team team : teams)
-    //     {
-    //         System.out.println("\nMost Goals for " + team.getTeamName());
-    //         ArrayList<Player> mostGoals = new ArrayList<Player>();
-    //         for(Player player : team.getPlayers()) 
-    //         {
-    //             int playerGoals = player.getScore().getGoals(); //write helper method if this doesn't move
-    //             if(mostGoals.size() > 0)
-    //             {
-    //                 int max = mostGoals.get(0).getKicks();
-    //                 if(playerGoals > max)
-    //                 {
-    //                     mostGoals.clear();
-    //                     mostGoals.add(player);
-    //                 }
-    //                 else if (playerGoals == max)
-    //                     mostGoals.add(player);
-    //             }
-    //             else
-    //             {
-    //                 if(playerGoals > 0)
-    //                     mostGoals.add(player);
-    //             }
-    //         }
-
-    //         if (mostGoals.size() > 0)
-    //         {
-    //             for (Player player : mostGoals)
-    //             {
-    //                 System.out.println(player.getPlayerName());
-    //             }
-    //         }
-    //         else
-    //             System.out.println("No goal scorers.");
-    //     }
-        
-    //     //player stats
-    //     for(Team team : teams)
-    //     {
-    //         System.out.println("\n" + team.getTeamName());
-    //         for(Player player : team.getPlayers()) //I'd like to sort the players
-    //         {
-    //             System.out.println(player.getStats());
-    //         }
-    //     }
-
-    //     System.out.println("\nInjured Players:");
-
-    //     for(Team team : teams)
-    //     {
-    //         System.out.print(team.listInjuredPlayers());
-    //     }
-
-    //     System.out.println("\nReported Players:");
-
-    //     for(Team team : teams)
-    //     {
-    //         System.out.print(team.listReportedPlayers());
-    //     }
-
-    //     //prep all data for print from stats above
-    //     FileIO fileio = new FileIO();
-
-    //     for(Team team : teams)
-    //     {
-    //         String teamData = team.statsToWrite();
-    //         String fileName = team.getTeamName() + "Updated.txt"; //these are currently the wrong file names
-    //         fileio.writeFile(teamData, fileName);
-    //     }
-    // }
-} //currently 354, lets see what we can drop this to
+} 

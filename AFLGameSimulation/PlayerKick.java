@@ -6,8 +6,7 @@ public class PlayerKick
 
     public PlayerKick()
     {
-        // this.result = null;
-        // this.fieldPosition = null;
+
     }
 
     public PlayerKick(Player player, boolean isStarPlayer) //??? this()??

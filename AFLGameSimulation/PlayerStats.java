@@ -1,6 +1,7 @@
 public class PlayerStats
 {
 	private Player player;
+	private String name;
 	private Team team;
 	private int kicks;
 	private int goals;
@@ -16,10 +17,9 @@ public class PlayerStats
 
 	}
 
-	///need to deal with auto updates of effectiveDisposals
-
     public PlayerStats(Player player, Team team) {
         this.player = player;
+		this.name = player.getPlayerName();
 		this.team = team;
         this.kicks = 0;
         this.goals = 0;
@@ -85,16 +85,26 @@ public class PlayerStats
 		return this.turnovers;
 	}
 
-	public void setPasses(int pass)
+	public String getName()
+	{
+		return this.name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public void setPasses(int passes)
 	{
 		this.passes = passes;
-		//update effective
+		calculateEffectDisposals();
 	}
 
 	public void setTurnovers(int turnover)
 	{
 		this.turnovers = turnovers;
-		//set effective
+		calculateEffectDisposals();
 	}
 
     public Player getPlayer()
@@ -172,6 +182,6 @@ public class PlayerStats
 
 	private void calculateEffectDisposals()
 	{
-		setEffectiveDisposals((double)(getGoals() + getPasses()) * 100 / (double)getKicks());
+		setEffectiveDisposals((double)(getGoals() + getPasses() + getBehinds()) * 100 / (double)getKicks());
 	}
 }
