@@ -1,11 +1,12 @@
 public class Player
 {
-    private String playerName;
     private String fieldPosition;
-    private int seasonGoals;
-    private boolean starPlayer;
     private boolean isInjured;
     private boolean isReported;
+    private String playerName;
+    private int seasonGoals;
+    private boolean starPlayer;
+
 
     public Player()
     {
@@ -25,9 +26,12 @@ public class Player
         this.seasonGoals = seasonGoals; //do i have to use setters if i'm calling this()
     }
 
-    public String display() //need all fields, clarify bools
+    public String display()
     {
-        return getPlayerName() + " " + getFieldPosition() + " " + isStarPlayer() + " " + getSeasonGoals();
+        return getPlayerName() 
+            + " " + getFieldPosition() + " starPlayer: " + isStarPlayer()
+            + " goals: " + getSeasonGoals()  + " injured: " + isInjured() 
+            + " reported: " + isReported();
     }
 
     public String getFieldPosition()
@@ -50,16 +54,6 @@ public class Player
         this.seasonGoals++;
     }
 
-    public void setIsInjured(boolean isInjured)
-    {
-        this.isInjured = isInjured;
-    }
-
-    public void setIsReported(boolean isReported)
-    {
-        this.isReported = isReported;
-    }
-
     public void injure()
     {
         setIsInjured(true);
@@ -80,9 +74,28 @@ public class Player
         return this.starPlayer;
     }
 
+    public PlayerKick kick()
+    {
+        PlayerKick playerKick = new PlayerKick(this, isStarPlayer());
+        if (playerKick.getResult().equals("Goal"))
+            incrementSeasonGoals();
+
+        return playerKick;
+    }
+
     public void setFieldPosition(String fieldPosition)
     {
         this.fieldPosition = fieldPosition;
+    }
+
+    public void setIsInjured(boolean isInjured)
+    {
+        this.isInjured = isInjured;
+    }
+
+    public void setIsReported(boolean isReported)
+    {
+        this.isReported = isReported;
     }
 
     public void setPlayerName(String playerName)
@@ -98,14 +111,5 @@ public class Player
     public void setStarPlayer(boolean starPlayer)
     {
         this.starPlayer = starPlayer;
-    }
-
-    public PlayerKick kick()
-    {
-        PlayerKick playerKick = new PlayerKick(this, isStarPlayer());
-        if (playerKick.getResult().equals("Goal"))
-            incrementSeasonGoals();
-
-        return playerKick;
     }
 }

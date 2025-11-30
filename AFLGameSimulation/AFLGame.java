@@ -178,7 +178,7 @@ public class AFLGame
     private void printMostGoals(Statistics stats)
     {
         ArrayList<PlayerStats> mostGoals = stats.getHighlights("Goals");
-        print("Players with the most goals:");
+        print("Players with the most goals for each team:");
         for (PlayerStats playerStats : mostGoals)
         {
             print("\t" + playerStats.getName() 
@@ -190,7 +190,7 @@ public class AFLGame
     private void printMostKicks(Statistics stats)
     {
         ArrayList<PlayerStats> mostKicks = stats.getHighlights("Kicks");
-        print("Players with the most kicks:");
+        print("Players with the most kicks for each team:");
         for (PlayerStats playerStats : mostKicks)
         { //coupling
             print("\t" + playerStats.getName() 

@@ -3,9 +3,9 @@ import java.util.Collections;
 
 public class Team
 {
-    private String teamName;
-    private Score score;
     private ArrayList<Player> players;
+    private Score score;
+    private String teamName;
 
     public Team()
     {
@@ -48,79 +48,6 @@ public class Team
         }
     }
 
-    public ArrayList<Player> getActivePlayers()
-    {
-        ArrayList<Player> activePlayers = new ArrayList<Player>();
-        activePlayers.addAll(getPlayersOfPosition("Forward"));
-        activePlayers.addAll(getPlayersOfPosition("Midfielder"));
-        activePlayers.addAll(getPlayersOfPosition("Defender"));
-        return activePlayers;
-    }
-
-    public ArrayList<Player> getPlayersOfPosition(String position)
-    {
-        ArrayList<Player> requestedPlayers = new ArrayList<Player>();
-        for(Player player : getPlayers())
-        {
-            if(player.isInjured() == false && player.getFieldPosition().equals(position))
-            {
-                requestedPlayers.add(player);
-            }
-        }
-
-        return requestedPlayers;
-    }
-
-    public ArrayList<Player> getInjuredPlayers()
-    {
-        ArrayList<Player> injuredPlayers = new ArrayList<Player>();
-        for(Player player : getPlayers())
-        {
-            if(player.isInjured())
-            {
-                injuredPlayers.add(player);
-            }
-        }
-        return injuredPlayers;
-    }
-
-    public void replacePlayer(Player injuredPlayer) //surely can improve this
-    {
-        String position = injuredPlayer.getFieldPosition();
-        if(getPlayersOfPosition("Reserve").size() > 0)
-        {
-            getPlayersOfPosition("Reserve").get(0).setFieldPosition(position);
-        }
-    }
-
-    public String listInjuredPlayers()
-    {
-        String injuredPlayers = "";
-        for(Player player : getInjuredPlayers())
-        {
-            injuredPlayers += player.getPlayerName() + "\n";
-        }
-
-        return injuredPlayers;
-    }
-
-    public String listReportedPlayers()
-    {
-        String reportedPlayers = "";
-        for(Player player : getPlayers())
-        {
-            if(player.isReported())
-                reportedPlayers += player.getPlayerName() + "\n";
-        }
-
-        return reportedPlayers;
-    }
-
-    public String getTeamName()
-    {
-        return this.teamName;
-    }
-
     public Player chooseRandomPlayerFromPosition(String position)
     {
         ArrayList<Player> temp = new ArrayList<Player>(getPlayersOfPosition(position));
@@ -154,9 +81,50 @@ public class Team
         return getScore().display();
     }
 
+    public ArrayList<Player> getActivePlayers()
+    {
+        ArrayList<Player> activePlayers = new ArrayList<Player>();
+        activePlayers.addAll(getPlayersOfPosition("Forward"));
+        activePlayers.addAll(getPlayersOfPosition("Midfielder"));
+        activePlayers.addAll(getPlayersOfPosition("Defender"));
+        return activePlayers;
+    }
+
+    public ArrayList<Player> getInjuredPlayers()
+    {
+        ArrayList<Player> injuredPlayers = new ArrayList<Player>();
+        for(Player player : getPlayers())
+        {
+            if(player.isInjured())
+            {
+                injuredPlayers.add(player);
+            }
+        }
+        return injuredPlayers;
+    }
+
     public ArrayList<Player> getPlayers()
     {
         return this.players;
+    }
+
+    public ArrayList<Player> getPlayersOfPosition(String position)
+    {
+        ArrayList<Player> requestedPlayers = new ArrayList<Player>();
+        for(Player player : getPlayers())
+        {
+            if(player.isInjured() == false && player.getFieldPosition().equals(position))
+            {
+                requestedPlayers.add(player);
+            }
+        }
+
+        return requestedPlayers;
+    }
+
+    public int getPoints()
+    {
+        return getScore().getPoints();
     }
 
     public Score getScore()
@@ -164,9 +132,18 @@ public class Team
         return this.score;
     }
 
-    public int getPoints()
+    public String getTeamName()
     {
-        return getScore().getPoints();
+        return this.teamName;
+    }
+
+    public void replacePlayer(Player injuredPlayer) //surely can improve this
+    {
+        String position = injuredPlayer.getFieldPosition();
+        if(getPlayersOfPosition("Reserve").size() > 0)
+        {
+            getPlayersOfPosition("Reserve").get(0).setFieldPosition(position);
+        }
     }
 
     public void scoreBehind()
@@ -177,5 +154,20 @@ public class Team
     public void scoreGoal()
     {
         getScore().addGoal();
+    }
+
+    private void setPlayers(ArrayList<Player> players)
+    {
+        this.players = players;
+    }
+
+    private void setScore(Score score)
+    {
+        this.score = score;
+    }
+
+    private void setTeamName(String teamName)
+    {
+        this.teamName = teamName;
     }
 }
