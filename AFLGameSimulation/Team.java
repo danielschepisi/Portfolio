@@ -70,6 +70,34 @@ public class Team
             System.exit(1);
         }
 
+        int forwards = 0;
+        int midfielders = 0;
+        int defenders = 0;
+        for (Player player : this.players)
+        {
+            switch (player.getFieldPosition())
+            {
+                case "Forward":
+                    forwards++;
+                    break;
+                case "Midfielders":
+                    midfielders++;
+                    break;
+                case "Defenders":
+                    defenders++;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (forwards < 5 || midfielders < 5 || defenders < 5)
+        {
+            System.out.println("Team must have at least 5 players in each position.");
+            System.out.println("Exiting game.");
+            System.exit(1);
+        }
+
         if (starPlayers > 0)
         {
             ArrayList<Player> activePlayers = new ArrayList<Player>(getActivePlayers());

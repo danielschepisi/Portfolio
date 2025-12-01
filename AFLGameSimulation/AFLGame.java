@@ -154,7 +154,8 @@ public class AFLGame
 
 				if (teamWithTooManyInjuires != null && !(period == NUMBER_OF_PERIODS && i == EVENTS_PER_PERIOD))
                 {
-				    System.out.println("Game forfeit by " + teamWithTooManyInjuires.getTeamName());
+                    printLine();
+				    System.out.println("\tGame forfeit by " + teamWithTooManyInjuires.getTeamName());
                     continueGame = false;
 					break;
                 }
