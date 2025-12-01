@@ -7,13 +7,12 @@
  */
 
 /* NOTE: This class is made instead of a testing strategy
-   document becuase it can be submitted in Ed.
+   document because it can be submitted in Ed.
    There is a helper testing method listing all the required tests. 
    As this is meant to be a testing strategy document I've omitted
    documentation of the method but instead placed the expected and 
    actual test results below.
  */
-
 
 public class Test
 {
@@ -49,8 +48,6 @@ public class Test
 		testSetStarPlayer();
 	}
 
-
-	
 	public void testConstructorDefault()
 	{
 		System.out.println(new Player().display());

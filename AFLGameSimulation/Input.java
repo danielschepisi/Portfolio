@@ -19,7 +19,7 @@ public class Input
     * the provide message
     * @param    message    The message to display to the user
     */
-    public int askForIntegerInput(String message) //??mark as throws??
+    public int askForIntegerInput(String message)
     {
         Scanner console = new Scanner(System.in);
         System.out.println(message);

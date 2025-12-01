@@ -48,7 +48,7 @@ public class GameModel
 		{
 			String teamAText = fileio.readFile("teamA.txt");
 			String teamBText = fileio.readFile("teamB.txt");
-			setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers)); //condense?
+			setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers));
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -113,7 +113,7 @@ public class GameModel
 	/**
     * Determines and returns the winning team
     */
-	public Team getWinningTeam() //clean up
+	public Team getWinningTeam()
 	{
 		Team winningTeam = null;
 		Team forfeitTeam = teamWithoutEnoughPlayers();
@@ -183,7 +183,7 @@ public class GameModel
 		PlayerKick playerKick = getPlayerWithPossession().kick();
 		currentEvent.setPlayerKick(playerKick);
 
-		switch (playerKick.getResult()) //watch for validation on assigning from teams
+		switch (playerKick.getResult())
 		{
 			case "Goal":
 				getTeamWithPossession().scoreGoal();
@@ -214,7 +214,7 @@ public class GameModel
 				currentEvent.setReceivingPlayer(getPlayerWithPossession());
 				break;
 			default:
-				//something went wrong
+				System.out.println("An unexpected result was received in GameModel.");
 				break;     
 		}
 
@@ -256,11 +256,12 @@ public class GameModel
 			String teamData = team.getTeamName();
 			for(Player player : team.getPlayers())
 			{
-				teamData += "\n" + player.getPlayerName() + "," + player.getFieldPosition() + "," + player.getSeasonGoals();
+				teamData += "\n" + player.getPlayerName() + "," + player.getFieldPosition() 
+					+ "," + player.getSeasonGoals();
 			} 
 
             String fileName = team.getTeamName().replaceAll("\\s", "") + "Updated.txt";
-            fileio.writeFile(teamData, fileName); //catch exceptions
+            fileio.writeFile(teamData, fileName);
         }
 	}
 

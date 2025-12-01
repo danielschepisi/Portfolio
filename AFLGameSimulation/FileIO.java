@@ -31,8 +31,6 @@ public class FileIO
         }
         
         String fileBody = "";
-
-        //think i can simplify all this, check last video vs notes, can all be in one try block
         try
         {
             FileReader reader = new FileReader(fileName);
@@ -57,7 +55,7 @@ public class FileIO
                 }
             }
         }
-        catch (Exception e) //FileNotFOundException, IOException
+        catch (Exception e)
         {
             System.out.println("There was an error reading the file.");
         }

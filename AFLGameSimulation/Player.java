@@ -13,7 +13,6 @@ public class Player
     private int seasonGoals;
     private boolean starPlayer;
 
-
     public Player()
     {
         this.playerName = "No Name";
@@ -43,10 +42,14 @@ public class Player
             || fieldPosition.equals("Reserve"))
             this.fieldPosition = fieldPosition;
         else 
-            throw new IllegalArgumentException("FieldPosition doesn't match avaiable options. Received: " + fieldPosition);
+            throw new IllegalArgumentException(
+                "FieldPosition doesn't match avaiable options. Received: " + fieldPosition
+            );
 
         if(seasonGoals < 0)
-            throw new IllegalArgumentException("SeasonGoals can't be negative. Received: " + seasonGoals);
+            throw new IllegalArgumentException(
+                "SeasonGoals can't be negative. Received: " + seasonGoals
+            );
         else
             this.seasonGoals = seasonGoals;
 

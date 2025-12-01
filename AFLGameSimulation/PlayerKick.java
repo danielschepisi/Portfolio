@@ -88,7 +88,7 @@ public class PlayerKick
                     break;
 
                 default:
-                    //something went wrong
+                    System.out.println("There was an error assigning a result on PlayerKick");
                     break;
             }
         }
@@ -149,7 +149,7 @@ public class PlayerKick
                     break;
 
                 default:
-                    //something went wrong
+                    System.out.println("There was an error assigning a result on PlayerKick");
                     break;
             }
         }

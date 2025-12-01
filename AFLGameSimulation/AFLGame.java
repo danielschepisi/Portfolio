@@ -130,13 +130,15 @@ public class AFLGame
                         printScore();
                         break;
                     case "Pass":
-                        System.out.println(playerName + " passes the ball to " + newPlayerPosition + " " + newPlayerName + ".");
+                        System.out.println(playerName + " passes the ball to " 
+                            + newPlayerPosition + " " + newPlayerName + ".");
                         break;
                     case "Turnover":
-                        System.out.println(playerName + " turns the ball over to " + newPlayerPosition + " " + newPlayerName + ".");
+                        System.out.println(playerName + " turns the ball over to " 
+                            + newPlayerPosition + " " + newPlayerName + ".");
                         break;
                     default:
-                        //something went wrong ?? throw exception??
+                        System.out.println("An unexpected result was received in AFLGame.");
                     break;
                 }
 
@@ -235,7 +237,7 @@ public class AFLGame
         ArrayList<PlayerStats> mostKicks = stats.getHighlights("Kicks");
         print("Players with the most kicks for each team:");
         for (PlayerStats playerStats : mostKicks)
-        { //coupling
+        {
             print("\t" + playerStats.getName() 
                 + " " + playerStats.getKicks() + " kicks."
             );

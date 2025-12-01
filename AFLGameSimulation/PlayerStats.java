@@ -19,7 +19,6 @@ public class PlayerStats
 	private Team team;
 	private int turnovers;
 	
-	
 	public PlayerStats()
 	{
 
@@ -69,7 +68,7 @@ public class PlayerStats
 				setReported(true);
 				break;
 			default:
-				//something went wrong
+				System.out.println("There was an adding to the field on PlayerStats.");
 				break;
 		}
 	}
@@ -81,7 +80,9 @@ public class PlayerStats
     */
 	private void calculateEffectDisposals()
 	{
-		setEffectiveDisposals((double)(getGoals() + getPasses() + getBehinds()) * 100 / (double)getKicks());
+		setEffectiveDisposals((double)(
+			getGoals() + getPasses() + getBehinds()) * 100 / (double)getKicks()
+		);
 	}
 
 	/**
@@ -154,7 +155,7 @@ public class PlayerStats
     */
     public Player getPlayer()
 	{
-        return this.player;
+    	return this.player;
     }
 
 	/**
