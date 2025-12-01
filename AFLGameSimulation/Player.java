@@ -16,20 +16,43 @@ public class Player
 
     public Player()
     {
-        this.playerName = "";
-        this.fieldPosition = "";
+        this.playerName = "No Name";
+        this.fieldPosition = "Reserve";
         this.seasonGoals = 0;
         this.starPlayer = false;
         this.isInjured = false;
         this.isReported = false;
     }
 
+    /**
+     * Constructor that validates input arguments
+     * @param playerName The name of the player
+     * @param fieldPosition Position of the player
+     * @param seasonGoals The number of seasonGoals (must be non-negative)
+     * @throws IllegalArgumentException if seasonGoals are negative or
+     * fieldPosition isn't valid
+     */
     public Player(String playerName, String fieldPosition, int seasonGoals)
     {
-        this();
+        if (Validator.isBlank(playerName))
+            throw new IllegalArgumentException("PlayerName can't be blank.");
         this.playerName = playerName;
-        this.fieldPosition = fieldPosition;
-        this.seasonGoals = seasonGoals;
+        if (fieldPosition.equals("Forward") 
+            || fieldPosition.equals("Midfielder")
+            || fieldPosition.equals("Defender")
+            || fieldPosition.equals("Reserve"))
+            this.fieldPosition = fieldPosition;
+        else 
+            throw new IllegalArgumentException("FieldPosition doesn't match avaiable options. Received: " + fieldPosition);
+
+        if(seasonGoals < 0)
+            throw new IllegalArgumentException("SeasonGoals can't be negative. Received: " + seasonGoals);
+        else
+            this.seasonGoals = seasonGoals;
+
+        this.starPlayer = false;
+        this.isInjured = false;
+        this.isReported = false;
     }
 
     /**
@@ -70,7 +93,7 @@ public class Player
     /**
     * Increments the season goals by one
     */
-    private void incrementSeasonGoals()
+    public void incrementSeasonGoals()
     {
         this.seasonGoals++;
     }
@@ -151,18 +174,24 @@ public class Player
     * Sets the player's name
     * @param    playerName    The player's name
     */
-    private void setPlayerName(String playerName)
+    public void setPlayerName(String playerName)
     {
-        this.playerName = playerName;
+        if (Validator.isBlank(playerName))
+            System.out.println("Can't set blank playerName.");
+        else
+            this.playerName = playerName;
     }
 
     /**
     * Sets the player's season goals
     * @param    seasonGoals    the number of goals
     */
-    private void setSeasonGoals(int seasonGoals)
+    public void setSeasonGoals(int seasonGoals)
     {
-        this.seasonGoals = seasonGoals;
+        if (seasonGoals < 0)
+            System.out.println("SeasonGoals can't be negative");
+        else
+            this.seasonGoals = seasonGoals;
     }
 
     /**

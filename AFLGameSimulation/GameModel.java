@@ -44,14 +44,18 @@ public class GameModel
 	private final void createTeamsFromFile(int starPlayers)
     {
         FileIO fileio = new FileIO();
-
-        //need to catch error around here and terminate if Exception
-        //maybe we need this class to throw an Exception so that we can catch it here
-        //maybe we can put a throws in teh catch in fileio?
-        String teamAText = fileio.readFile("teamA.txt");
-        String teamBText = fileio.readFile("teamB.txt");
-
-        setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers)); //condense?
+		try
+		{
+			String teamAText = fileio.readFile("teamA.txt");
+			String teamBText = fileio.readFile("teamB.txt");
+			setTeams(new Team(teamAText, starPlayers), new Team(teamBText, starPlayers)); //condense?
+		}
+		catch (IllegalArgumentException e)
+		{
+			System.out.println("There was an error reading the file: " + e.getMessage());
+			System.out.println("Exiting game.");
+			System.exit(1);
+		}
     }
 
 	/**

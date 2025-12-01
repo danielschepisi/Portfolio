@@ -24,7 +24,8 @@ public class Team
 
     public Team(String teamText, int starPlayers)
     {
-        this();
+        this.players = new ArrayList<Player>();
+        this.score = new Score();
 
         String[] teamData = teamText.split("\r\n");
         int i = 0;
@@ -32,17 +33,41 @@ public class Team
         for (String element : teamData)
         {
             if (i == 0)
-                teamName = element;
+            {
+                if(Validator.isBlank(element))
+                {
+                    System.out.println("Error creating team. Team name must not be blank");
+                    System.out.println("Exiting game.");
+                    System.exit(1);
+                }
+                else
+                    this.teamName = element;
+            }
             else
             {
-                //need to catch errors if doesn't work creating player
-
                 String[] playerData = element.split(",");
-                Player player = new Player(playerData[0], playerData[1], Integer.parseInt(playerData[2])); //fix later
-                players.add(player);
+                try 
+                {
+                    Player player = new Player(playerData[0], 
+                        playerData[1], Integer.parseInt(playerData[2]));
+                    players.add(player);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    System.out.println("Error creating player. " + e.getMessage());
+                    System.out.println("Exiting game.");
+                    System.exit(1);
+                }  
             }
 
             i++;
+        }
+
+        if(i != 23)
+        {
+            System.out.println("Team must have 22 players not " + i);
+            System.out.println("Exiting game.");
+            System.exit(1);
         }
 
         if (starPlayers > 0)
@@ -64,7 +89,7 @@ public class Team
     {
         ArrayList<Player> temp = new ArrayList<Player>(getPlayersOfPosition(position));
         Collections.shuffle(temp);
-        return temp.get(0); //need validation checks??
+        return temp.get(0);
     }
 
     /**

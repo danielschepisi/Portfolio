@@ -27,7 +27,7 @@ public class Validator
     * Checks if an the string is blank
     * @param    input    The string to be validated
     */
-    public boolean isBlank(String input)
+    public static boolean isBlank(String input)
     {
         return input.trim().length() == 0 ? true : false;
     }

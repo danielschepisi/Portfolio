@@ -20,10 +20,16 @@ public class FileIO
     * Reads the file with the provided fileName and returns 
     * he contents as a string
     * @param    fileName    The name of the file to be read
+    * @throws    fileIllegalArgumentExceptionName    If the fileName is blank
     */
-    public String readFile(String fileName) //fileName > 0
+    public String readFile(String fileName)
     {
-        // if(fileName.trim().length() > 0) use this, else print please enter file name
+        if(Validator.isBlank(fileName))
+        {
+            System.out.println("Please enter a FileName");
+            throw new IllegalArgumentException("Can't read file if fileName is blank.");
+        }
+        
         String fileBody = "";
 
         //think i can simplify all this, check last video vs notes, can all be in one try block
@@ -53,7 +59,7 @@ public class FileIO
         }
         catch (Exception e) //FileNotFOundException, IOException
         {
-            System.out.println("The was an error reading the file.");
+            System.out.println("There was an error reading the file.");
         }
 
         return fileBody;
@@ -63,21 +69,22 @@ public class FileIO
     * Writes the provided text to a file with the provided file name
     * @param    text    The data to write
     * @param    fileName    The name of the file
+    * @throws    fileIllegalArgumentExceptionName    If the fileName is blank
     */
     public void writeFile(String text, String fileName)
     {
         try
         {
-            if(fileName.trim().length() > 0)
+            if(Validator.isBlank(fileName))
             {
-                //he used print writer in video, check difference
-                FileWriter writer = new FileWriter(fileName);
-                writer.append(text);
-                writer.close();
+                System.out.println("Please enter a FileName");
+                throw new IllegalArgumentException("Can't write to file with blank fileName.");
             }
             else
             {
-                System.out.println("Please enter a FileName");
+                FileWriter writer = new FileWriter(fileName);
+                writer.append(text);
+                writer.close();
             }
         }
         catch (Exception e)
