@@ -112,7 +112,7 @@ public class Test
 	{
 		try
 		{
-			Player player = new Player("Tom", "Forward", -2);
+			Player player = new Player("Tom", "Forward", -1);
 		}
 		catch (IllegalArgumentException e)
 		{

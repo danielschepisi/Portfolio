@@ -80,10 +80,10 @@ public class Team
                 case "Forward":
                     forwards++;
                     break;
-                case "Midfielders":
+                case "Midfielder":
                     midfielders++;
                     break;
-                case "Defenders":
+                case "Defender":
                     defenders++;
                     break;
                 default:
