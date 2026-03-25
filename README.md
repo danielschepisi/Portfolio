@@ -1,4 +1,4 @@
-# Development-Portfolio
+    # Development-Portfolio
 
 JAVA
 
@@ -22,8 +22,8 @@ SWIFT
 - Quizzler
     - Fun little quiz app
 - Tipsy
-    - Divides a (dinner) bill between the chosen number of people
-
+    - Divides a (dinner) bill between the chosen number of people.
+ 
 
 
 OBJ - C
@@ -40,3 +40,4 @@ OBJ - C
         - Uses SLComposeViewController
     - Third CoreData
         - Uses CoreData
+
