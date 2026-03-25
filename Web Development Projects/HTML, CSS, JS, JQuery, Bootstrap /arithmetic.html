@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alfie's Arithmetic</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Import Chart.js from CDN -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Chalkduster', cursive, sans-serif; /* Use Chalkduster as a fun font */
+            /* Fun font */
+        }
+
+        .question-container {
+            margin-bottom: 20px;
+            height: 200px;
+            /* Increased height */
+            overflow: auto;
+            /* Add scroll if content exceeds the fixed height */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Horizontally center "Question:" and "Working:" */
+            font-size: 1.8em;
+            /* Larger font size */
+            text-align: center;
+            /* Center text */
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .option {
+            margin: 0 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 10px;
+            /* Consistent border-radius */
+            font-size: 1.8em; /* Adjust the font size as needed */
+        }
+
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* Hide the Next Question button initially */
+        #next-question-btn,
+        #play-again-btn {
+            display: none;
+            margin-top: 10px;
+            /* Add some space */
+            border-radius: 10px;
+            /* Consistent border-radius */
+        }
+
+        #accuracy-chart {
+            display: none;
+        }
+
+        #accuracy-display {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.8em;
+        }
+
+        .correct {
+            background-color: lightgreen;
+        }
+
+        .incorrect {
+            background-color: #ffcccc;
+        }
+
+        #question-counter {
+            font-size: 1.8em;
+            /* Smaller font size */
+            margin-bottom: 10px;
+            /* Add space between question counter and question */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="font-family: 'Chalkduster', cursive, sans-serif;">Alfie's Arithmetic</h1>
+
+        <!-- Accuracy display -->
+        <p id="accuracy-display"></p>
+
+        <!-- Question counter -->
+        <div id="question-counter"></div>
+
+        <div class="question-container" id="question-container">
+            <p id="question-content"></p>
+        </div>
+        <div class="question-container" id="working-container" style="display: none;">
+            <p id="working-content"></p>
+        </div>
+        <div class="options-container" id="options-container">
+            <button class="option" onclick="checkAnswer(this)"></button>
+            <button class="option" onclick="checkAnswer(this)"></button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+
+        <!-- Button for generating the next question -->
+        <span id="next-question-btn" onclick="generateQuestion()" style="cursor: pointer; font-size: 2em;">➡️</span>
+
+        <!-- Play Again button -->
+        <span id="play-again-btn" onclick="playAgain()" style="cursor: pointer; font-size: 2em;">🔄</span>
+
+        <!-- Accuracy chart -->
+        <canvas id="accuracy-chart" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        // Initialize variables to track accuracy and question count
+        let correctAnswers = 0;
+        let totalAnswers = 0;
+        let questionCount = 0;
+        let accuracyScores = [];
+
+        // Retrieve accuracy scores from local storage
+        const accuracyScoresStr = localStorage.getItem('accuracyScores');
+        if (accuracyScoresStr) {
+            accuracyScores = JSON.parse(accuracyScoresStr);
+        }
+
+        // Function to update accuracy display
+        function updateAccuracyDisplay() {
+            const accuracyDisplay = document.getElementById('accuracy-display');
+            if (totalAnswers > 0) {
+                const accuracy = (correctAnswers / totalAnswers) * 100;
+                accuracyDisplay.textContent = `Accuracy: ${accuracy.toFixed()}%`;
+            } else {
+                accuracyDisplay.textContent = 'Answer a question.';
+            }
+        }
+
+        // Function to reset the game and play again
+        function playAgain() {
+            // Reload the page to start over
+            location.reload();
+        }
+
+        function showNextQuestionButton() {
+            // Show the Next Question button
+            document.getElementById("next-question-btn").style.display = "block";
+        }
+
+        function hideNextQuestionButton() {
+            // Hide the Next Question button
+            document.getElementById("next-question-btn").style.display = "none";
+        }
+
+        function clearFeedback() {
+            // Clear the feedback
+            document.getElementById("feedback").innerHTML = "";
+        }
+
+        function checkAnswer(selectedOption) {
+            const isAnswer = selectedOption.getAttribute('data-answer') === 'true';
+            const feedback = document.getElementById('feedback');
+            const questionContainer = document.getElementById('question-container');
+            const workingContainer = document.getElementById('working-container');
+            const options = document.getElementsByClassName('option');
+
+            // Disable all options to prevent further selection
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = true;
+            }
+
+            // Update accuracy variables
+            totalAnswers++;
+            if (isAnswer) {
+                correctAnswers++;
+                selectedOption.classList.add('correct');
+            } else {
+                selectedOption.classList.add('incorrect');
+            }
+            // Show the working container and hide the question container
+            questionContainer.style.display = 'none';
+            workingContainer.style.display = 'block';
+            showNextQuestionButton(); // Show the Next Question button after answering
+            updateAccuracyDisplay(); // Update accuracy display
+
+            // Check if 10 questions have been answered
+            if (totalAnswers === 10) {
+                // Calculate accuracy score and store it
+                const accuracyScore = (correctAnswers / totalAnswers) * 100;
+                accuracyScores.push(accuracyScore);
+                localStorage.setItem('accuracyScores', JSON.stringify(accuracyScores)); // Save accuracy scores to local storage
+                // Hide question counter, question container, and working container
+                document.getElementById('question-container').style.display = 'none';
+                document.getElementById('working-container').style.display = 'none';
+                // Hide options and Next Question button
+                document.getElementById('options-container').style.display = 'none';
+                document.getElementById('next-question-btn').style.display = 'none';
+                // Show accuracy chart and play again button
+                document.getElementById('accuracy-chart').style.display = 'block';
+                document.getElementById('play-again-btn').style.display = 'block';
+                // Plot accuracy chart
+                plotAccuracyChart();
+            }
+        }
+
+        function generateQuestion() {
+            hideNextQuestionButton(); // Hide the Next Question button when generating a new question
+            clearFeedback(); // Clear previous feedback
+            updateAccuracyDisplay(); // Update accuracy display
+            const questionContainer = document.getElementById('question-container');
+            const workingContainer = document.getElementById('working-container');
+            const questionContent = document.getElementById('question-content');
+            const workingContent = document.getElementById('working-content');
+            let question; // Declare question variable
+            const [generatedQuestion, working, key, distractor] = g(correctAnswers, totalAnswers); // Generate question components
+            question = generatedQuestion; // Assign generated question
+            questionCount++; // Increment question count
+            questionContent.innerHTML = String.raw`\(\begin{align}${"&" + question.join("\\\\&=")}\end{align}\)`; // Set inner HTML with the question
+            workingContent.innerHTML = String.raw`\(\begin{align}${"&" + working.join("\\\\&=")}\end{align}\)`; // Set inner HTML with the working
+            // Update question counter
+            document.getElementById('question-counter').textContent = `Question ${questionCount}`;
+            // Hide the working container and show the question container
+            questionContainer.style.display = 'block';
+            workingContainer.style.display = 'none';
+            const optionsContainer = document.getElementById('options-container');
+            const options = optionsContainer.getElementsByClassName('option');
+
+            // Enable all options
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = false;
+                options[i].classList.remove('correct', 'incorrect'); // Remove any previous coloring
+            }
+
+            // Assign answer and distractor to options randomly
+            const randomIndex = Math.floor(Math.random() * 2);
+            options[randomIndex].innerHTML = `${key}`;
+            options[randomIndex].setAttribute('data-answer', 'true');
+            options[randomIndex ? 0 : 1].innerHTML = `${distractor}`;
+            options[randomIndex ? 0 : 1].setAttribute('data-answer', 'false');
+
+            // Re-render MathJax
+            MathJax.typeset();
+        }
+
+        function addition() {
+            let a, b, answer;
+            while (true) {
+                a = Math.random() < 0.5 ? -1 : 1;
+                b = Math.floor(Math.random() * 144) + 1;
+                answer = a + b;
+                if (answer <= 144) break;
+            }
+            let question = `${a} + ${b}`;
+            return [question, answer];
+        }
+
+        function subtraction() {
+            let a, b, answer;
+            while (true) {
+                a = Math.floor(Math.random() * 144) + 1;
+                b = Math.floor(Math.random() * a) + 1;
+                answer = a - b;
+                if (answer >= -144) break;
+            }
+            let question = `${a} - ${b}`;
+            return [question, answer];
+        }
+
+        function multiplication() {
+            let a = Math.floor(Math.random() * 11) + 2;
+            let b = Math.floor(Math.random() * 11) + 2;
+            let answer = a * b;
+            let question = `${a} * ${b}`;
+            return [question, answer];
+        }
+
+        function division() {
+            let a = Math.floor(Math.random() * 11) + 2;
+            let b = Math.floor(Math.random() * 11) + 2;
+            let answer = a;
+            let question = `${a * b} / ${b}`;
+            return [question, answer];
+        }
+
+        function f1() {
+            let operations = ["addition", "subtraction", "multiplication", "division"];
+            let operation = operations[Math.floor(Math.random() * operations.length)];
+            let question, answer;
+
+            switch (operation) {
+                case "addition":
+                    [question, answer] = addition();
+                    break;
+                case "subtraction":
+                    [question, answer] = subtraction();
+                    break;
+                case "multiplication":
+                    [question, answer] = multiplication();
+                    break;
+                case "division":
+                    [question, answer] = division();
+                    break;
+            }
+
+            let key = answer.toString();
+            question = question.replace("/", "\\div").replace("*", "\\times");
+            let working = [question, key];
+            let distractor;
+            while (true) {
+                distractor = (Math.round(Math.random() * (2 * Math.abs(answer)) - Math.abs(answer))).toString();
+                if (distractor !== key) break;
+            }
+
+            return [[question], working, key, distractor];
+        }
+
+        function f2() {
+            while (true) {
+                const addition = Math.random() < 0.5 ? "+" : "-";
+                const multiplication = Math.random() < 0.5 ? "*" : "/";
+                const a = String(Math.floor(Math.random() * 12) + 1);
+                const b = String(Math.floor(Math.random() * 12) + 1);
+                const c = String(Math.floor(Math.random() * 12) + 1);
+                const d = String(Math.floor(Math.random() * 3) + 1);
+                const e = c + "^" + d;
+                const arr = [a, b, e];
+                arr.sort(() => Math.random() - 0.5);
+                const [f, g, h] = arr;
+                const i = "(" + f + addition + g + ")";
+                const j = Math.random() < 0.5 ? h : i;
+                const k = j === h ? i : h;
+                let string1 = j + multiplication + k;
+                let string2 = string1.replace(e, eval(e.replace("^", "**")));
+                let string3 = string1.replace(i, eval(i.replace("^", "**"))).replace(e, eval(e.replace("^", "**")));
+                const answer = eval(string1.replace("^", "**"));
+                if (Number.isInteger(answer) && Math.abs(answer) < 144 && eval(e.replace("^", "**")) !== 1) {
+                    const key = String(answer);
+                    string1 = string1.replace("/", "\\div").replace("*", "\\times");
+                    string2 = string2.replace("/", "\\div").replace("*", "\\times");
+                    string3 = string3.replace("/", "\\div").replace("*", "\\times");
+                    let working = "";
+                    if (d == "1") {
+                        question = string2;
+                        working = [question, string3, key];
+                    } else {
+                        question = string1;
+                        working = [question, string2, string3, key];
+                    }
+                    let distractor;
+                    while (true) {
+                        scale = Math.max(0.2 * Math.abs(answer), 1);
+                        distractor = String(Math.pow(eval(addition + "1"), Math.random() < 0.5 ? 0 : 1) * Math.round(answer + Math.random() * 2 * scale - scale));
+                        if (distractor !== key) {
+                            break;
+                        }
+                    }
+                    return [[question], working, key, distractor];
+                }
+            }
+        }
+
+        function g(correctAnswers, totalAnswers) {
+            let weight = 2 * Math.max(correctAnswers / totalAnswers, 1 / 2) - 1;
+            let U = Math.random();
+            if (U < weight) {
+                [question, working, key, distractor] = f2();
+            } else {
+                [question, working, key, distractor] = f1();
+            }
+            return [question, working, key, distractor];
+        }
+
+        function plotAccuracyChart() {
+            // Get accuracy scores from local storage
+            const accuracyScoresStr = localStorage.getItem('accuracyScores');
+            if (accuracyScoresStr) {
+                const accuracyScores = JSON.parse(accuracyScoresStr);
+                // Trim to last 10 scores
+                const lastTenScores = accuracyScores.slice(-10);
+
+                const ctx = document.getElementById('accuracy-chart').getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: lastTenScores.length }, (_, i) => i + 1),
+                        datasets: [{
+                            label: '',
+                            data: lastTenScores,
+                            borderColor: 'rgb(75, 192, 192)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initial question generation
+        generateQuestion();
+    </script>
+</body>
+
+</html>
