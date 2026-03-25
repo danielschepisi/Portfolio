@@ -1,0 +1,16 @@
+PODS:
+  - DistanceGetter (0.2)
+
+DEPENDENCIES:
+  - DistanceGetter (~> 0.1)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - DistanceGetter
+
+SPEC CHECKSUMS:
+  DistanceGetter: 868fa28725dd4e7bfaa0ed650abba4f825395f3f
+
+PODFILE CHECKSUM: faf5951369bcee990a73282de66e8b8a19b831b1
+
+COCOAPODS: 1.6.0

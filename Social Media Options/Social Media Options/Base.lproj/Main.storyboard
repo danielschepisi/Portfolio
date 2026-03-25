@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hjV-y1-3rp">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="VaQ-Mc-Biu"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem systemItem="action" id="OYe-pm-8lF">
+                                        <connections>
+                                            <action selector="postToTwitter:" destination="BYZ-38-t0r" id="4p6-pK-kMb"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="action" id="0a3-F2-sA2">
+                                        <connections>
+                                            <action selector="postToFacebook:" destination="BYZ-38-t0r" id="hWs-5p-qG3"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="action" id="N2w-1s-DHb">
+                                        <connections>
+                                            <action selector="moreOptionsAction:" destination="BYZ-38-t0r" id="iOg-qa-KwS"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="action" id="g3K-ok-TSg">
+                                        <connections>
+                                            <action selector="uselessShareAction:" destination="BYZ-38-t0r" id="rul-Lx-N3Q"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="4r6-5p-0hR">
+                                <rect key="frame" x="0.0" y="64" width="225" height="169.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">Text to share on Twitter Text to share on Twitter Text to share on Twitter Text to share on Twitter Text to share on Twitter Text to share on Twitter Text to share on Twitter Text to share on Twitter Text to share on Twitter Text to share on Twitter Text to share on Twitter</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Text to share on Facebook" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="F6W-8T-ehk">
+                                <rect key="frame" x="150" y="233.5" width="225" height="169"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Text for our own choosing. The sky's the limit!" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="N7b-Ab-It8">
+                                <rect key="frame" x="0.0" y="402.5" width="225" height="169.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="N7b-Ab-It8" firstAttribute="top" secondItem="F6W-8T-ehk" secondAttribute="bottom" id="BoL-0X-V7C"/>
+                            <constraint firstItem="F6W-8T-ehk" firstAttribute="top" secondItem="4r6-5p-0hR" secondAttribute="bottom" id="C5T-Sw-tfk"/>
+                            <constraint firstItem="F6W-8T-ehk" firstAttribute="height" secondItem="4r6-5p-0hR" secondAttribute="height" id="DKA-n4-xRY"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="F6W-8T-ehk" secondAttribute="trailing" id="G7o-Pd-2vL"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4r6-5p-0hR" secondAttribute="trailing" constant="150" id="LmX-oy-SdU"/>
+                            <constraint firstItem="N7b-Ab-It8" firstAttribute="height" secondItem="4r6-5p-0hR" secondAttribute="height" id="P9B-NQ-Jxl"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="N7b-Ab-It8" secondAttribute="bottom" constant="95" id="PnG-zy-Yea"/>
+                            <constraint firstItem="hjV-y1-3rp" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="URd-yT-Ehn"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="N7b-Ab-It8" secondAttribute="trailing" constant="150" id="XON-19-yU7"/>
+                            <constraint firstItem="4r6-5p-0hR" firstAttribute="top" secondItem="hjV-y1-3rp" secondAttribute="bottom" id="YGI-bL-2nq"/>
+                            <constraint firstItem="4r6-5p-0hR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aSi-Td-KrX"/>
+                            <constraint firstItem="hjV-y1-3rp" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="d5I-Lx-Q7L"/>
+                            <constraint firstItem="F6W-8T-ehk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="150" id="hdl-tQ-Nm3"/>
+                            <constraint firstItem="N7b-Ab-It8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ns5-k6-tYM"/>
+                            <constraint firstItem="hjV-y1-3rp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="oKy-56-bqr"/>
+                            <constraint firstItem="F6W-8T-ehk" firstAttribute="top" secondItem="4r6-5p-0hR" secondAttribute="bottom" id="v1v-3w-Aba"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="facebookTextView" destination="F6W-8T-ehk" id="8b2-DG-Z2V"/>
+                        <outlet property="moreTextView" destination="N7b-Ab-It8" id="dkX-Im-vzj"/>
+                        <outlet property="socialToolbar" destination="hjV-y1-3rp" id="xtG-ph-6yE"/>
+                        <outlet property="twitterTextView" destination="4r6-5p-0hR" id="xoS-uf-TcE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-48.799999999999997" y="148.87556221889056"/>
+        </scene>
+    </scenes>
+</document>

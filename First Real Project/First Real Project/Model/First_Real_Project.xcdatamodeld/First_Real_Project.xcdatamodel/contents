@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Assessment" representedClassName=".Assessment" syncable="YES" codeGenerationType="class">
+        <attribute name="classBanding" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="period" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="school" optional="YES" attributeType="String"/>
+        <attribute name="subject" optional="YES" attributeType="String"/>
+        <attribute name="term" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="yearLevel" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="partOfAssessment" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Student" inverseName="student" inverseEntity="Student"/>
+        <relationship name="whoAssessed" maxCount="1" deletionRule="Nullify" destinationEntity="Teacher" inverseName="assessmentsDone" inverseEntity="Teacher"/>
+    </entity>
+    <entity name="Event" representedClassName="Event" codeGenerationType="class">
+        <attribute name="timestamp" optional="YES" attributeType="Date"/>
+        <userInfo/>
+    </entity>
+    <entity name="Student" representedClassName="Student" syncable="YES" codeGenerationType="class">
+        <attribute name="cognitiveLevel" optional="YES" attributeType="String"/>
+        <attribute name="isEngaged" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+        <attribute name="teachingStyle" optional="YES" attributeType="String"/>
+        <attribute name="teachingType" optional="YES" attributeType="String"/>
+        <attribute name="workCompleted" optional="YES" attributeType="String"/>
+        <relationship name="student" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Assessment" inverseName="partOfAssessment" inverseEntity="Assessment"/>
+    </entity>
+    <entity name="Teacher" representedClassName=".Teacher" syncable="YES" codeGenerationType="class">
+        <attribute name="interactionType" optional="YES" attributeType="String"/>
+        <attribute name="lessonOutline" optional="YES" attributeType="String"/>
+        <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="style" optional="YES" attributeType="String"/>
+        <attribute name="yearsTeaching" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="assessmentsDone" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Assessment" inverseName="whoAssessed" inverseEntity="Assessment"/>
+    </entity>
+    <elements>
+        <element name="Assessment" positionX="146.36328125" positionY="160.6796875" width="128" height="178"/>
+        <element name="Event" positionX="79.2734375" positionY="12.0859375" width="128" height="58"/>
+        <element name="Student" positionX="382.1796875" positionY="215.640625" width="128" height="148"/>
+        <element name="Teacher" positionX="-53.9765625" positionY="138.515625" width="128" height="148"/>
+    </elements>
+</model>

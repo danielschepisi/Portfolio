@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Paddock" representedClassName=".Paddock" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="viewOrder" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="padToTasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Task" inverseName="taskToPad" inverseEntity="Task"/>
+    </entity>
+    <entity name="Task" representedClassName=".Task" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="priority" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="taskToPad" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Paddock" inverseName="padToTasks" inverseEntity="Paddock"/>
+    </entity>
+</model>
