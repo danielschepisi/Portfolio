@@ -2,8 +2,8 @@
 
 JAVA
 
-AFLGameSimulation:
-    This is a simulated game of AFL created as a requirement for an online Masters subject at Monash Uni.
+- AFLGameSimulation
+    - This is a simulated game of AFL created as a requirement for an online Masters subject at Monash Uni.
 
 
 
@@ -24,20 +24,22 @@ SWIFT
 - Tipsy
     - Divides a (dinner) bill between the chosen number of people.
  
+WEB DEV
 
+- This includes code from a web dev course that I was doing
 
 OBJ - C
 
-    - Card Matching Game: 
-        - No surprises here, it’s a card matching game
-    - Bouncing Ball
-        - Just an animation using SpriteKit
-    - Collions
-        - More animations
-    - Geo Fence
-        - Uses CLLocationManager
-    - Social Media Options
-        - Uses SLComposeViewController
-    - Third CoreData
-        - Uses CoreData
+- Card Matching Game: 
+    - No surprises here, it’s a card matching game
+- Bouncing Ball
+    - Just an animation using SpriteKit
+- Collions
+    - More animations
+- Geo Fence
+    - Uses CLLocationManager
+- Social Media Options
+    - Uses SLComposeViewController
+- Third CoreData
+    - Uses CoreData
 
